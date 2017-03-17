@@ -1,6 +1,6 @@
 <?php
 /**
- * EzPHP必经之路
+ * Ez必经之路
  * 
  * by 江上多南风
  */
@@ -30,7 +30,7 @@ define('PLUGIN_PATH',   __DIR__.SEP.'plugin' . SEP);                            
 if(version_compare(PHP_VERSION,'5.4.0','<')) {
     ini_set('magic_quotes_runtime',0);
     define('MAGIC_QUOTES_GPC',get_magic_quotes_gpc()? true : false);                
-}else{
+} else {
     define('MAGIC_QUOTES_GPC',false);                                               // php5.4以后移除MAGIC_QUOTES_GPC（自动转义'"\）
 }
 define('IS_CGI',(0 === strpos(PHP_SAPI,'cgi') || false !== strpos(PHP_SAPI,'fcgi')) ? 1 : 0 );
@@ -61,3 +61,11 @@ if( !defined('__UPLOAD__') ) define('__UPLOAD__', SITE_URL.'/public/uploads');
 if( !defined('__CSS__') )    define('__CSS__',  SITE_URL.'/css');
 if( !defined('__JS__') )     define('__JS__',   SITE_URL.'/js');
 if( !defined('__IMG__') )    define('__IMG__',  SITE_URL.'/images');
+
+// 引入核心函数
+require(__DIR__.SEP.'function.php');
+
+// 自动加载函数注册
+spl_autoload_register('autoload');
+
+EZ::start();
