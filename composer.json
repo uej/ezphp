@@ -1,0 +1,17 @@
+{
+    "name": "uej/ezphp",
+    "description": "Ezphp is a simple php framework",
+    "keywords": ["ez", "framework", "ezphp", "simple framework"],
+    "type": "library",
+    "authors": [
+		{"name": "lxj", "email": "my2233@foxmail.com"}
+	],
+    "require": {
+		"php": ">=5.4"
+	},
+    "autoload": {
+		"psr-4": {
+			"EZ\\": "/framework"
+		}
+	}
+}
