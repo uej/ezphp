@@ -301,11 +301,12 @@ class Medoo
 				$statement->bindValue($key, $value[ 0 ], $value[ 1 ]);
 			}
 
-			$res = $statement->execute();
-
+			$statement->execute();
+            $row = $statement->rowCount();
+            
 			$this->statement = $statement;
 
-			return $res;
+			return $row;
 		} else {
 			return false;
 		}

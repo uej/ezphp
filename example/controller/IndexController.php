@@ -11,8 +11,9 @@ class IndexController extends Controller
 {
     public function index() {
         $Test = new \ez\core\Model('test');
-        $data = $Test->update(['Value' => 'sadasdasssssssssssssssssssssssssssssss爱神的箭'], ['ID' => 1]);
+        //$data = $Test->update(['Num' => 'sadasdasssssssssssssssssssssssssssssss爱神的箭'], ['ID' => 1]);
+        $data = $Test->insert([''])
         var_dump($data);
-        dump();
+        var_dump($Test->last());
     }
 }
