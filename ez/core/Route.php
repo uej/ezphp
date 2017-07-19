@@ -38,19 +38,12 @@ class Route
      */
     public function parsePath()
     {
-<<<<<<< HEAD
         /* url重写 */
-=======
-        /* url伪静态 */
->>>>>>> refs/remotes/origin/1.0.0
         if (config('urlRewrite')) {
             $script_name = isset($_SERVER['ORIG_SCRIPT_NAME']) ? $_SERVER['ORIG_SCRIPT_NAME'] : $_SERVER['SCRIPT_NAME'];
             $pathinfo = trim(str_replace(Config('urlSuffix'), '', $_SERVER['REDIRECT_PATH_INFO']), '/');
             $param = explode('/', $pathinfo);
-<<<<<<< HEAD
             
-=======
->>>>>>> refs/remotes/origin/1.0.0
         } else {
             if(isset($_SERVER['PATH_INFO']) && !empty($_SERVER['PATH_INFO'])) {
                 $param = explode('/', trim(str_replace(Config('urlSuffix'), '', $_SERVER['PATH_INFO']), '/'));
@@ -74,7 +67,6 @@ class Route
         }
     }
     
-<<<<<<< HEAD
     /**
      * url生成，根据默认路由规则
      * 
@@ -162,7 +154,5 @@ class Route
         }
     }
     
-=======
->>>>>>> refs/remotes/origin/1.0.0
 }
 

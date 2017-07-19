@@ -7,11 +7,8 @@
 
 /**
  * 框架自动加载函数
-<<<<<<< HEAD
  * 
  * @param string $classname 类名
-=======
->>>>>>> refs/remotes/origin/1.0.0
  */
 function ezAutoload($classname)
 {
@@ -21,20 +18,12 @@ function ezAutoload($classname)
         $filename = __DIR__ . '/../' . str_replace('\\', '/', $classname . '.php');
 
         /* 引入文件 */
-<<<<<<< HEAD
         if (is_file($filename)) {
-=======
-        if(is_file($filename)) {
->>>>>>> refs/remotes/origin/1.0.0
             include $filename;
         }
     } else {
         $filename = __DIR__ . '/core/' . $classname . '.php';
-<<<<<<< HEAD
         if (is_file($filename)) {
-=======
-        if(is_file($filename)) {
->>>>>>> refs/remotes/origin/1.0.0
             include $filename;
         }
     }

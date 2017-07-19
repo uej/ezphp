@@ -5,7 +5,6 @@
  * @author lxj
  */
 return [
-<<<<<<< HEAD
     /* 是否开启调试 */
     'debug'             => TRUE,
     
@@ -42,17 +41,6 @@ return [
         ],
     ],
     
-=======
-    
-    /* 数据库配置 */
-    'dbHost'            => '',                          // 数据库地址
-    'dbName'            => '',                          // 数据库名
-    'dbUser'            => '',                          // 数据库用户名
-    'dbPassword'        => '',                          // 数据库密码
-    'dbPrefix'          => 'cmf_',                      // 数据库表前缀
-    'dbCharset'         => 'utf8',                      // 数据库链接字符集
-    
->>>>>>> refs/remotes/origin/1.0.0
     /* 应用配置 */
     'defaultController' => 'index',
     'defaultAction'     => 'index',
@@ -61,7 +49,6 @@ return [
     'urlSuffix'         => '.html',
     
     'sessionAutoStart'  => TRUE,
-<<<<<<< HEAD
     'sessionSavePath'   => '',
     'sessionDriver'     => '',
     'sessionExpire'     => 3600,
@@ -80,17 +67,6 @@ return [
     
     'errorPage'         => null,
     
-=======
-    'sessionDriver'     => '',
-    'sessionExpire'     => 3600,
-    
-    'timeZone'          => 'PRC',                       // 时区
-    
-    'openGzip'          => TRUE,                        // 是否开启gzip压缩
-    
-    'templateSuffix'    => '.php',                      // 模板后缀
-    
->>>>>>> refs/remotes/origin/1.0.0
 ];
 
 
