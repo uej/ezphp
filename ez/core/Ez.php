@@ -1,6 +1,5 @@
 <?php
 namespace ez\core;
-use ez\core\Application;
 
 /**
  * 框架初始化类
@@ -22,6 +21,9 @@ class Ez
 			die('PHP版过低! 运行系统必须大于5.4。谢谢合作!');
 		}
         
+        set_error_handler(['\\ez\\core\\Error', 'errorHandler']);
+        set_exception_handler(['\\ez\\core\\Error', 'exceptionHandler']);
+        
         /* 是否开启面压缩 */
 		if(config('openGzip')) {
 			ob_start('ob_gzhandler');
@@ -29,7 +31,11 @@ class Ez
         
         /* session驱动 */
         if (config('sessionAutoStart')) {
-            if(empty(config('sessionDriver'))) {
+            if (empty(config('sessionDriver'))) {
+                $sessionSavePath = config('sessionSavePath');
+                if (!empty($sessionSavePath) && is_dir($sessionSavePath)) {
+                    session_save_path($sessionSavePath);
+                }
                 session_start();
             } else {
                 if(class_exists(config('sessionDriver'))) {
@@ -43,7 +49,7 @@ class Ez
         
         /* 常量设置 */
         if( !defined('HTTPHOST') ) {
-            if(empty($_SERVER['HTTPS']) || $_SERVER['HTTPS']=='off') {
+            if(!isset($_SERVER['HTTPS']) || empty($_SERVER['HTTPS']) || $_SERVER['HTTPS']=='off') {
                 define('HTTPHOST',   'http://'.$_SERVER['HTTP_HOST']);
             } else {
                 define('HTTPHOST',   'https://'.$_SERVER['HTTP_HOST']);
@@ -67,8 +73,9 @@ class Ez
             $app = new Application();
             $app->run();
         } catch (Exception $ex) {
-            
+            Log::addLog($ex->__toString());
         }
+        ob_flush();
     }
 }
 

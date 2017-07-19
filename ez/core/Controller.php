@@ -66,6 +66,23 @@ class Controller
         }
     }
     
+    /**
+     * Action跳转(URL重定向)
+     * 
+     * @param string $url 跳转的URL表达式
+     * @param array $params 其它URL参数
+     * @param integer $delay 延时跳转的时间 单位为秒
+     * @param string $msg 跳转提示信息
+     * @return void
+     * 
+     * @access public
+     */
+    public function redirect($url, $params = [], $delay = 0, $msg='')
+    {
+        $url = Route::createUrl($url, $params);
+        Route::redirect($url,$delay,$msg);
+    }
+    
 }
 
 
