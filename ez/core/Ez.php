@@ -21,6 +21,9 @@ class Ez
 			die('PHP版过低! 运行系统必须大于5.4。谢谢合作!');
 		}
         
+        set_error_handler(['\\ez\\core\\Error', 'errorHandler']);
+        set_exception_handler(['\\ez\\core\\Error', 'exceptionHandler']);
+        
         /* 是否开启面压缩 */
 		if(config('openGzip')) {
 			ob_start('ob_gzhandler');
@@ -70,8 +73,9 @@ class Ez
             $app = new Application();
             $app->run();
         } catch (Exception $ex) {
-            
+            Log::addLog($ex->__toString());
         }
+        ob_flush();
     }
 }
 

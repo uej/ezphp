@@ -7,6 +7,8 @@
 
 /**
  * 框架自动加载函数
+ * 
+ * @param string $classname 类名
  */
 function ezAutoload($classname)
 {
@@ -16,12 +18,12 @@ function ezAutoload($classname)
         $filename = __DIR__ . '/../' . str_replace('\\', '/', $classname . '.php');
 
         /* 引入文件 */
-        if(is_file($filename)) {
+        if (is_file($filename)) {
             include $filename;
         }
     } else {
         $filename = __DIR__ . '/core/' . $classname . '.php';
-        if(is_file($filename)) {
+        if (is_file($filename)) {
             include $filename;
         }
     }

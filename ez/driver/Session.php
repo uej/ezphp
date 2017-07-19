@@ -29,5 +29,30 @@ abstract class Session
 			register_shutdown_function(array($this, 'close'));
 		}
 	}
+    
+    /* 初始 */ 
+	abstract public function init();
+    
+	/* 开始 */
+	abstract public function start();
+    
+	/* 打开 */ 
+	abstract public function open($path, $name);
+    
+	/* 关闭 */ 
+	abstract public function close();
+    
+	/* 删除 */ 
+	abstract public function destroy($id);
+    
+	/* 回收 */ 
+	abstract public function gc($maxLifetime);
+    
+	/* 写入 */ 
+	abstract public function write($id, $data);
+    
+	/* 读取 */ 
+	abstract public function read($id);
+    
 }
 

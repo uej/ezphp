@@ -1,0 +1,6 @@
+2017-07-19 19:44:15 ErrorLevel:8, E_NOTICE: Undefined variable: pathname in E:\2233\2233\Another\EZ\ez\core\Log.php at line 32\r\n2017-07-19 19:44:15 ErrorLevel:2, E_WARNING: mkdir(): Invalid path in E:\2233\2233\Another\EZ\ez\core\Log.php at line 32\r\n2017-07-19 19:44:15 Error: Call to undefined function example\controller\dump() in E:\2233\2233\Another\EZ\example\controller\IndexController.php:16
+Stack trace:
+#0 E:\2233\2233\Another\EZ\ez\core\Application.php(39): example\controller\IndexController->index()
+#1 E:\2233\2233\Another\EZ\ez\core\Ez.php(74): ez\core\Application->run()
+#2 E:\2233\2233\Another\EZ\example\web\index.php(22): ez\core\Ez::start()
+#3 {main}\r\n
