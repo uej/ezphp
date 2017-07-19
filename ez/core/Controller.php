@@ -66,6 +66,7 @@ class Controller
         }
     }
     
+<<<<<<< HEAD
     /**
      * Action跳转(URL重定向)
      * 
@@ -83,6 +84,8 @@ class Controller
         Route::redirect($url,$delay,$msg);
     }
     
+=======
+>>>>>>> refs/remotes/origin/1.0.0
 }
 
 
