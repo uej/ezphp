@@ -301,11 +301,12 @@ class Medoo
 				$statement->bindValue($key, $value[ 0 ], $value[ 1 ]);
 			}
 
-			$res = $statement->execute();
-
+			$statement->execute();
+            $row = $statement->rowCount();
+            
 			$this->statement = $statement;
 
-			return $res;
+			return $row;
 		} else {
 			return false;
 		}
@@ -1031,11 +1032,12 @@ class Medoo
 
 		$is_single_column = (is_string($column) && $column !== '*');
 
-		$query = $this->exec($this->connect(2), $this->selectContext($table, $map, $join, $columns, $where), $map);
+		$result = $this->exec($this->connect(2), $this->selectContext($table, $map, $join, $columns, $where), $map);
+        $query  = $this->statement;
 
 		$this->columnMap($columns, $column_map);
 
-		if (!$query)
+		if (!$result)
 		{
 			return false;
 		}
@@ -1157,8 +1159,15 @@ class Medoo
 			$fields[] = $this->columnQuote(preg_replace("/(^#|\s*\[JSON\]$)/i", '', $key));
 		}
 
-		return $this->exec($this->connect(), 'INSERT INTO ' . $this->tableQuote($table) . ' (' . implode(', ', $fields) . ') VALUES ' . implode(', ', $stack), $map);
-	}
+		$result = $this->exec($this->connect(), 'INSERT INTO ' . $this->tableQuote($table) . ' (' . implode(', ', $fields) . ') VALUES ' . implode(', ', $stack), $map);
+        $query  = $this->statement;
+        
+        if(!$result) {
+            return false;
+        }
+        
+        return $this->id();
+    }
 
 	public function update($table, $data, $where = null)
 	{
@@ -1288,9 +1297,10 @@ class Medoo
 
 		$is_single_column = (is_string($column) && $column !== '*');
 
-		$query = $this->exec($this->connect(2), $this->selectContext($table, $map, $join, $columns, $where) . ' LIMIT 1', $map);
+		$result = $this->exec($this->connect(2), $this->selectContext($table, $map, $join, $columns, $where) . ' LIMIT 1', $map);
+        $query  = $this->statement;
 
-		if ($query)
+		if ($result)
 		{
 			$data = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -1328,9 +1338,10 @@ class Medoo
 		$map = [];
 		$column = null;
 
-		$query = $this->exec($this->connect(2), 'SELECT EXISTS(' . $this->selectContext($table, $map, $join, $column, $where, 1) . ')', $map);
+		$result = $this->exec($this->connect(2), 'SELECT EXISTS(' . $this->selectContext($table, $map, $join, $column, $where, 1) . ')', $map);
+        $query  = $this->statement;
 
-		if ($query)
+		if ($result)
 		{
 			return $query->fetchColumn() === '1';
 		}
@@ -1344,7 +1355,8 @@ class Medoo
 	{
 		$map = [];
 
-		$query = $this->exec($this->connect(2), $this->selectContext($table, $map, $join, $column, $where, 'COUNT'), $map);
+		$this->exec($this->connect(2), $this->selectContext($table, $map, $join, $column, $where, 'COUNT'), $map);
+        $query = $this->statement;
 
 		return $query ? 0 + $query->fetchColumn() : false;
 	}
@@ -1353,9 +1365,10 @@ class Medoo
 	{
 		$map = [];
 
-		$query = $this->exec($this->connect(2), $this->selectContext($table, $map, $join, $column, $where, 'MAX'), $map);
+		$result = $this->exec($this->connect(2), $this->selectContext($table, $map, $join, $column, $where, 'MAX'), $map);
+        $query  = $this->statement;
 
-		if ($query)
+		if ($result)
 		{
 			$max = $query->fetchColumn();
 
@@ -1371,9 +1384,10 @@ class Medoo
 	{
 		$map = [];
 
-		$query = $this->exec($this->connect(2), $this->selectContext($table, $map, $join, $column, $where, 'MIN'), $map);
+		$result = $this->exec($this->connect(2), $this->selectContext($table, $map, $join, $column, $where, 'MIN'), $map);
+        $query  = $this->statement;
 
-		if ($query)
+		if ($result)
 		{
 			$min = $query->fetchColumn();
 
@@ -1389,7 +1403,8 @@ class Medoo
 	{
 		$map = [];
 
-		$query = $this->exec($this->connect(2), $this->selectContext($table, $map, $join, $column, $where, 'AVG'), $map);
+		$this->exec($this->connect(2), $this->selectContext($table, $map, $join, $column, $where, 'AVG'), $map);
+        $query = $this->statement;
 
 		return $query ? 0 + $query->fetchColumn() : false;
 	}
@@ -1398,8 +1413,9 @@ class Medoo
 	{
 		$map = [];
 
-		$query = $this->exec($this->connect(2), $this->selectContext($table, $map, $join, $column, $where, 'SUM'), $map);
-
+		$this->exec($this->connect(2), $this->selectContext($table, $map, $join, $column, $where, 'SUM'), $map);
+        $query = $this->statement;
+        
 		return $query ? 0 + $query->fetchColumn() : false;
 	}
 
@@ -1425,16 +1441,18 @@ class Medoo
 	public function id()
 	{
 		$type = $this->database_type;
+        
+        $link = $this->connect(1);
 
 		if ($type === 'oracle') {
 			return 0;
 		} elseif ($type === 'mssql') {
-			return $this->pdo->query('SELECT SCOPE_IDENTITY()')->fetchColumn();
+			return $link->query('SELECT SCOPE_IDENTITY()')->fetchColumn();
 		} elseif ($type === 'pgsql') {
-			return $this->pdo->query('SELECT LASTVAL()')->fetchColumn();
+			return $link->query('SELECT LASTVAL()')->fetchColumn();
 		}
 
-		return $this->pdo->lastInsertId();
+		return $link->lastInsertId();
 	}
 
 	public function debug()
