@@ -13,14 +13,13 @@ class IndexController extends Controller
         $Test = new \ez\core\Model('test');
         //$data = $Test->update(['Num' => 'sadasdasssssssssssssssssssssssssssssss爱神的箭'], ['ID' => 1]);
 //        $data = $Test->insert([''])
-        $data = $Test->select('*', ['LIMIT' => [(intval($_GET['p'])-1)*5, 5]]);
+        $data = $Test->findPage(5);
         
-        $Page = new \ez\core\Page($Test->count(), 5);
+//        $Page = new \ez\core\Page($Test->count(), 5);
         echo '<pre>';
-        var_dump($data);
+        var_dump($data['data']);
         echo '</pre>';
-        echo $Page->show();
+        echo $data['html'];
         
-        echo $a;
     }
 }

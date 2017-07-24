@@ -116,5 +116,124 @@ class Model
         }
     }
     
+    /**
+     * 分页查找
+     * 
+     * @param mixed $columns 查询字段
+     * @param int $page 每页展示条数
+     * @param int $max 最多展示页数
+     * @return array 数据结果  [ 'data'=>数据数组, 'pages'=>总页数, 'count'=>数据总条数, 'html'=>分页html代码 ]
+     */
+    public function findPage($page = 10, $where = null, $max = 9, $columns = '*') {
+        
+        /* 总数，页数计算 */
+        $p     = isset($_GET['p']) ? intval($_GET['p']) : 1;
+        $count = $this->count($where);
+        if(!$count) {
+            return FALSE;
+        }
+        $pages = ceil($count/$page);
+        if( $max > $pages ) {
+            $max = $pages;
+        }
+        $p > $pages && $p = $pages;
+        
+        if( empty($p) || $p < 0 ) {
+            $p     = 1;
+            $start = 0;
+        } else if( $p > $pages ) { 
+            $start = ($pages-1) * $page;
+        } else {
+            $start = (intval($p) - 1) * $page;
+        }
+        is_array($where) ? $where = array_merge( $where, [ 'LIMIT' =>  [$start, $page] ] ) : $where = [ 'LIMIT' =>  [$start, $page] ];
+        
+        /* 数据 */
+        $data  = $this->select($columns, $where);
+        if(!$data) {
+            return FALSE;
+        }
+        
+        /* get参数 */
+        $parameter      = $_GET;
+        
+        /* 分页html生成 */
+        if($pages > 1) {
+            $html  = '<span class="total">共'.$count.'条，'.$pages.'页</span>';
+            if( empty($p) || $p == 1 ) {
+                $html .= '<span class="disabled">上一页</span>';
+            } else {
+                $params = $parameter;
+                $params['p'] = $p-1;
+                $html .= '<a href="'.Route::createUrl(ACTION_NAME, $params).'">上一页</a>';
+            }
+            if( $p > ceil($max/2) ) {
+                $i = $p - floor($max/2);
+            }
+            if( isset($i) ) {
+                $showMax = $p + floor($max/2);
+                $max % 2 == 0 && $showMax--;
+            } else {
+                $showMax = $max;
+                $i       = 1;
+            }
+            if( $i > $pages-($max-1) ) {
+                $i = $pages-($max-1);
+            }
+            if( $showMax > $pages ) {
+                $showMax = $pages;
+            }
+            for( ; $i<=$showMax; $i++ ) {
+                if( $i != $p ) {
+                    $params = $parameter;
+                    $params['p'] = $i;
+                    $html .= '<a href="'.Route::createUrl(ACTION_NAME, $params).'">'.$i.'</a>';
+                } else {
+                    $html .= '<span class="nowpage">'.$i.'</span>';
+                }
+            }
+            if( $p == $pages ) {
+                $html .= '<span class="disabled">下一页</span>';
+            } else {
+                $params = $parameter;
+                $params['p'] = $p+1;
+                $html .= '<a href="'.Route::createUrl(ACTION_NAME, $params).'">下一页</a>';
+            }
+            $params = $parameter;
+            unset($params['p']);
+            $url = Route::createUrl(ACTION_NAME, $params);
+            if( strpos($url, '?') === FALSE ) {
+                $url .= '?';
+            } else {
+                $url .= '&';
+            }
+            
+            $html .= '<span class="turnto">转到</span>
+            <input id="jump_page" class="textInput" value="" style="width:30px;" maxlength="10" type="text">
+            <span class="turnto">页</span>
+            <a href="javascript:void(0)" onclick="jumppage()">GO</a>
+            <script>
+                function jumppage() {
+                    var hrefPageNo = document.getElementById("jump_page");
+                    var hrefPageNoValue = hrefPageNo.value;
+                    var pattern = /^\d+$/;
+                    if(pattern.test(hrefPageNoValue) && hrefPageNoValue>0 && hrefPageNoValue<='.$pages.') {
+                        window.location.href="'.$url.'p="+hrefPageNoValue;
+                    } else {
+                        alert("页数输入不合法");
+                        hrefPageNo.focus();
+                    }
+                }
+            </script>';
+        }
+        
+        return [
+            'data'      => $data,
+            'pages'     => $pages,
+            'count'     => $count,
+            'html'      => $html,
+        ];
+        
+    }
     
 }
