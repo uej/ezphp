@@ -9,17 +9,15 @@ use ez\core\Controller;
  */
 class IndexController extends Controller
 {
-    public function index() {
-        $Test = new \ez\core\Model('test');
+    public function index()
+    {
+        $Test = new \example\model\TestModel();
         //$data = $Test->update(['Num' => 'sadasdasssssssssssssssssssssssssssssss爱神的箭'], ['ID' => 1]);
 //        $data = $Test->insert([''])
         $data = $Test->findPage(5);
         
 //        $Page = new \ez\core\Page($Test->count(), 5);
-        echo '<pre>';
-        var_dump($data['data']);
-        echo '</pre>';
-        echo $data['html'];
+        $this->display($data);
         
     }
 }
