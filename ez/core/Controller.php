@@ -45,7 +45,7 @@ class Controller
             extract($view);
             $template = '../view/' . strtolower(CONTROLLER_NAME) . '/' . strtolower(ACTION_NAME) . '.php';
             if(!is_file($template)) {
-                throw new Exception('template not exists');
+                throw new \Exception('template not exists');
             }
             include $template;
             
@@ -57,9 +57,9 @@ class Controller
             if (is_file($view)) {
                 include $view;
             } else {
-                $template = '../view/' . strtolower(CONTROLLER_NAME) . '/' . strtolower($view) . '.php';
+                $template = '../view/' . strtolower(CONTROLLER_NAME) . '/' . strtolower(ACTION_NAME) . '.php';
                 if(!is_file($template)) {
-                    throw new Exception('template not exists');
+                    throw new \Exception('template not exists');
                 }
                 include $template;
             }

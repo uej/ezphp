@@ -11,13 +11,18 @@ class IndexController extends Controller
 {
     public function index()
     {
-        $Test = new \example\model\TestModel();
+//        $Test = new \example\model\TestModel();
         //$data = $Test->update(['Num' => 'sadasdasssssssssssssssssssssssssssssss爱神的箭'], ['ID' => 1]);
 //        $data = $Test->insert([''])
-        $data = $Test->findPage(5);
+//        $data = $Test->findPage(5);
         
 //        $Page = new \ez\core\Page($Test->count(), 5);
-        $this->display($data);
+        $this->display();
         
+    }
+    
+    public function up() {
+        $Upload = new \ez\driver\Upload();
+        $Upload->doUpload();
     }
 }
