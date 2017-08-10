@@ -97,11 +97,6 @@ uploader.on( 'uploadComplete', function( file ) {
     $( '#'+file.id ).find('.progress').fadeOut();
 });
 
-//$("#ctlBtn").on( 'click', function() {  
-//        
-//        uploader.upload();  
-//       
-//      });
 $("#ctlBtn").click(function(){
     uploader.upload();
 });

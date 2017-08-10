@@ -129,7 +129,7 @@ class Upload {
 		/* 是否在允许的最大上传文件范围内 */
 		if ($size > $this->size) {
             $this->result['code'] = '3';
-            $this->result['msg']  = "文件过大，限制" . $this->size/1024/1024 . "MB";
+            $this->result['msg']  = "文件过大，限制" . sprintf('%.2f', $this->size/1024/1024) . "MB";
 			die(json_encode($this->result));
 		}
 
