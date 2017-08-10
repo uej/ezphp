@@ -18,10 +18,6 @@ class Model
      */
     public $trueTableName;
     
-    /**
-     * pdo数据库连接
-     */
-    protected $pdo;
     
     
     /**
@@ -110,15 +106,27 @@ class Model
     {
         if ($name == 'pdo') {
             return $this->makeMedoo()->connect();
+        } else if ($name == 'statement') {
+            return $this->makeMedoo()->statement;
         } else {
             throw new Exception('Attribute not exists');
         }
     }
     
+    /**
+     * 执行一条原生sql
+     * 
+     * @param string $sql
+     * @return boolean
+     */
     public function query($sql)
     {
         $this->makeMedoo()->query($sql);
-        return $this->makeMedoo()->statement->fetchAll(\PDO::FETCH_ASSOC);
+        if ($this->makeMedoo()->statement->errorCode() === '00000') {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
     }
     
     /**
