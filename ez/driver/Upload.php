@@ -153,10 +153,10 @@ class Upload {
         $targetDir = $this->path . 'upload_tmp/';
         $uploadDir = $this->path . date('Ymd') . '/';
 
-        if (!file_exists($targetDir)) {
+        if (!is_dir($targetDir)) {
             @mkdir($targetDir, 0777, TRUE);
         }
-        if (!file_exists($uploadDir)) {
+        if (!is_dir($uploadDir)) {
             @mkdir($uploadDir, 0777, TRUE);
         }
 
