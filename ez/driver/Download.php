@@ -23,7 +23,9 @@ class Download
      * @param boolean $reload 是否开启断点续传
      */
     public function download($file, $name='', $reload=false)
-    {  
+    {
+        @set_time_limit(0);
+        
         if (file_exists($file)) {
             if ($name=='') {
                 $name = basename($file);
