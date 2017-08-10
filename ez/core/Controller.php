@@ -83,6 +83,24 @@ class Controller
         Route::redirect($url,$delay,$msg);
     }
     
+    /**
+     * ajax返回
+     * 
+     * @param array 数据数组
+     * @param string JSON、STRING
+     */
+    public function ajaxReturn($data, $type = 'JSON')
+    {
+        switch (strtoupper($type)) {
+            case 'JSON':
+                is_array($data) && die(json_encode($data, JSON_UNESCAPED_UNICODE));
+                break;
+            case 'STRING':
+                is_string($data) && die($data);
+                break;
+        }
+    }
+    
 }
 
 

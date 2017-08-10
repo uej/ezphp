@@ -22,7 +22,7 @@ class Medoo
 
 	protected $prefix;
 
-	protected $statement;
+	public $statement;
 
 	protected $option = [];
 

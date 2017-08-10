@@ -65,7 +65,6 @@ class Model
     public function __call($name, $arguments)
     {
         if (in_array($name, [
-                'query',
                 'id', 
                 'action',
                 'quote',
@@ -114,6 +113,12 @@ class Model
         } else {
             throw new Exception('Attribute not exists');
         }
+    }
+    
+    public function query($sql)
+    {
+        $this->makeMedoo()->query($sql);
+        return $this->makeMedoo()->statement->fetchAll(\PDO::FETCH_ASSOC);
     }
     
     /**
