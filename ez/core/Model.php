@@ -18,6 +18,16 @@ class Model
      */
     public $trueTableName;
     
+    /**
+     * 错误信息
+     */
+    public $error;
+    
+    /**
+     * 字段验证规则
+     */
+    public $fieldCheckRule;
+    
     
     
     /**
@@ -32,7 +42,7 @@ class Model
             throw new Exception("no tableName");
         }
         
-        $this->trueTableName = config('dbPrefix');
+        $this->trueTableName = config('dbPrefix') . $this->tableName;
     }
     
     /**
@@ -137,8 +147,8 @@ class Model
      * @param int $max 最多展示页数
      * @return array 数据结果  [ 'data'=>数据数组, 'pages'=>总页数, 'count'=>数据总条数, 'html'=>分页html代码 ]
      */
-    public function findPage($page = 10, $where = null, $max = 9, $columns = '*') {
-        
+    public function findPage($page = 10, $where = null, $max = 9, $columns = '*')
+    {
         /* 总数，页数计算 */
         $p     = isset($_GET['p']) ? intval($_GET['p']) : 1;
         $count = $this->count($where);
@@ -246,7 +256,71 @@ class Model
             'count'     => $count,
             'html'      => $html,
         ];
+    }
+    
+    /**
+     * 创建数据
+     * 
+     * @param array $data 传入数据，只有数据库中有该字才会最终生成
+     * @return mixed 生成数据
+     * @access public
+     */
+    public function create($data = [])
+    {
+        if (empty($data)) {
+            $data = $_POST;
+        }
         
+        $arr = [];
+        
+        $this->query("SHOW COLUMNS FROM `$this->trueTableName`");
+        $columns = $this->statement->fetchAll(\PDO::FETCH_ASSOC);
+        foreach ($columns as $val) {
+            $keys[] = $val['Field'];
+        }
+        foreach ($data as $key => $val) {
+            if (in_array($key, $keys)) {
+                $arr[$key] = $val;
+            }
+        }
+        
+        $res = $this->checkColumns($arr);
+        if ($res) {
+            return $arr;
+        } else {
+            return FALSE;
+        }
+    }
+    
+    /**
+     * 字段验证
+     * 
+     * @param mixed $arr 待验证字段数组
+     * 
+     * @access protected
+     */
+    protected function checkColumns($arr) {
+        if (empty($arr)) {
+            $this->error = "数据为空";
+            return FALSE;
+        }
+        
+        if (empty($this->fieldCheckRule)) {
+            return TRUE;
+        }
+        
+        if (!is_array($this->fieldCheckRule)) {
+            $this->error = "Model::fieldCheckRule must be array";
+            return FALSE;
+        }
+        foreach ($arr as $key => $val) {
+            if (isset($this->fieldCheckRule[$key])) {
+                switch ($this->fieldCheckRule[$key]['type']) {
+                    case 'function':
+                        
+                }
+            }
+        }
     }
     
 }
