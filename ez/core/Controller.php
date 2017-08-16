@@ -18,6 +18,11 @@ class Controller
 	 */
 	public $suffix;
     
+    /**
+     * 模板变量
+     */
+    public $templateVariable = [];
+    
     
     /**
      * 构造函数
@@ -28,6 +33,24 @@ class Controller
     {
         $this->suffix = config('templateSuffix');
 		$this->templateDir = '../view/' . strtolower(CONTROLLER_NAME) . '/';
+    }
+    
+    /**
+     * 添加模板变量
+     * 
+     * @param mixed $name 变量名/模板变量键值对
+     * @param mixed $value 变量值
+     * @access public
+     */
+    public function assign($name, $value = '')
+    {
+        if (is_array($name)) {
+            $this->templateVariable = array_merge($this->templateVariable, $name);
+            return;
+        } elseif (is_string($name) && !empty($name)) {
+            $this->templateVariable = array_merge($this->templateVariable, ["$name" => $value]);
+            return;
+        }
     }
     
     /**
@@ -42,7 +65,8 @@ class Controller
     {
         /* 未指定模板，在默认位置寻找模板加载 */
         if (is_array($view)) {
-            extract($view);
+            $this->templateVariable = array_merge($this->templateVariable, $view);
+            extract($this->templateVariable);
             $template = '../view/' . strtolower(CONTROLLER_NAME) . '/' . strtolower(ACTION_NAME) . '.php';
             if(!is_file($template)) {
                 throw new \Exception('template not exists');
@@ -51,7 +75,8 @@ class Controller
             
         } else if (is_string($view)) {
             if (is_array($data) && !empty($data)) {
-                extract($data);
+                $this->templateVariable = array_merge($this->templateVariable, $data);
+                extract($this->templateVariable);
             }
             
             if (is_file($view)) {
