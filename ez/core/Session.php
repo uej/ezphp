@@ -44,6 +44,10 @@ class Session
             return TRUE;
         }
         
+        if ($key === NULL) {
+            $_SESSION = [];
+        }
+        
         return FALSE;
     }
 }

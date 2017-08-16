@@ -296,7 +296,7 @@ class Model
      * 字段验证
      * 
      * @param mixed $arr 待验证字段数组
-     * 
+     * @return boolen 验证成功返回true，否则返回false
      * @access protected
      */
     protected function checkColumns($arr) {
@@ -327,10 +327,11 @@ class Model
                             $this->error = $this->fieldCheckRule[$key]['errorMsg'];
                             return FALSE;
                         }
-                        break;
                 }
             }
         }
+        
+        return TRUE;
     }
     
 }
