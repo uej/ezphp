@@ -297,9 +297,9 @@ class Model
      * 
      * @param mixed $arr 待验证字段数组
      * @return boolen 验证成功返回true，否则返回false
-     * @access protected
+     * @access public
      */
-    protected function checkColumns($arr) {
+    public function checkColumns($arr) {
         if (empty($arr)) {
             $this->error = "数据为空";
             return FALSE;
