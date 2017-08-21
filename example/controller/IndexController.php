@@ -11,7 +11,9 @@ class IndexController extends Controller
 {
     public function index()
     {
+        
         $Test = new \example\model\TestModel();
+        die('www');
         $data = $Test->query("insert cmf_test (Value, Num) values ('加速的飒飒', '3')");
         var_dump($data);
 //        $data = $Test->insert([''])
