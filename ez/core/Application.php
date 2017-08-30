@@ -36,9 +36,7 @@ class Application
             $controller = new $controllerName();
             $action = ACTION_NAME;
             if(method_exists($controller, $action)) {
-                $this->aop_start();
                 $controller->$action();
-                $this->aop_end();
             } else {
                 throw new \Exception('not exist Action');
             }
@@ -47,17 +45,4 @@ class Application
         }
     }
     
-    /**
-     * 面向切面，开始前执行检查
-     * 
-     * @access private
-     */
-    private function aop_start()
-    {
-        
-    }
-    
-    /**
-     * 结束后执行
-     */
 }
