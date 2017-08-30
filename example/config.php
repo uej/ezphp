@@ -73,6 +73,9 @@ return [
     'uploadSize'        => 104857600,
     'uploadPath'        => __DIR__ . '/data/upload/',
     
+    /* 表单签名密匙 */
+    'inputSign'         => '0123456',
+    
 ];
 
 
