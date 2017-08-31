@@ -150,7 +150,7 @@ class Model
     public function findPage($page = 10, $where = null, $max = 9, $columns = '*')
     {
         /* 总数，页数计算 */
-        $p     = isset($_GET['p']) ? intval($_GET['p']) : 1;
+        $p     = isset(filter_input(INPUT_GET, 'p')) ? intval(filter_input(INPUT_GET, 'p')) : 1;
         $count = $this->count($where);
         if(!$count) {
             return FALSE;
@@ -178,7 +178,7 @@ class Model
         }
         
         /* get参数 */
-        $parameter      = $_GET;
+        $parameter      = filter_input_array(INPUT_GET);
         
         /* 分页html生成 */
         if($pages > 1) {
@@ -268,7 +268,7 @@ class Model
     public function create($data = [])
     {
         if (empty($data)) {
-            $data = $_POST;
+            $data = filter_input_array(INPUT_POST);
         }
         
         $arr = [];

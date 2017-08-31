@@ -23,6 +23,7 @@ class Form
      * 表单验证/隐藏域input验证
      * 
      * @param array $fields 字段
+     * @param string $signKey 签名
      * @param int $method 传送方式
      * @access public
      */
