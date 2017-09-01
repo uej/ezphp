@@ -145,13 +145,19 @@ class Model
      * @param mixed $columns 查询字段
      * @param int $page 每页展示条数
      * @param int $max 最多展示页数
+     * @param mixed $columns 查询字段
+     * @param mixed $join 链表查询设置
      * @return array 数据结果  [ 'data'=>数据数组, 'pages'=>总页数, 'count'=>数据总条数, 'html'=>分页html代码 ]
      */
-    public function findPage($page = 10, $where = null, $max = 9, $columns = '*')
+    public function findPage($page = 10, $where = null, $max = 9, $columns = '*', $join = null)
     {
         /* 总数，页数计算 */
         $p     = isset(filter_input(INPUT_GET, 'p')) ? intval(filter_input(INPUT_GET, 'p')) : 1;
-        $count = $this->count($where);
+        if(empty($join)) {
+            $count = $this->count($where);
+        } else {
+            $count = $this->count($join, $columns, $where);
+        }
         if(!$count) {
             return FALSE;
         }
@@ -172,7 +178,11 @@ class Model
         is_array($where) ? $where = array_merge( $where, [ 'LIMIT' =>  [$start, $page] ] ) : $where = [ 'LIMIT' =>  [$start, $page] ];
         
         /* 数据 */
-        $data  = $this->select($columns, $where);
+        if(empty($join)) {
+            $data = $this->select($columns, $where);
+        } else {
+            $data = $this->select($join, $columns, $where);
+        }
         if(!$data) {
             return FALSE;
         }
