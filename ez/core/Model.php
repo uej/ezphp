@@ -118,8 +118,10 @@ class Model
             return $this->makeMedoo()->connect();
         } else if ($name == 'statement') {
             return $this->makeMedoo()->statement;
+        } else if ($name == 'medoo') {
+            return $this->makeMedoo();
         } else {
-            throw new Exception('Attribute not exists');
+            throw new \Exception('Attribute not exists');
         }
     }
     
@@ -152,14 +154,19 @@ class Model
     public function findPage($page = 10, $where = null, $max = 9, $columns = '*', $join = null)
     {
         /* 总数，页数计算 */
-        $p     = isset(filter_input(INPUT_GET, 'p')) ? intval(filter_input(INPUT_GET, 'p')) : 1;
+        $p     = !empty(filter_input(INPUT_GET, 'p')) ? intval(filter_input(INPUT_GET, 'p')) : 1;
         if(empty($join)) {
             $count = $this->count($where);
         } else {
             $count = $this->count($join, $columns, $where);
         }
-        if(!$count) {
-            return FALSE;
+        if($count == 0) {
+            return [
+                'data'      => [],
+                'pages'     => 1,
+                'count'     => 0,
+                'html'      => '',
+            ];
         }
         $pages = ceil($count/$page);
         if( $max > $pages ) {
