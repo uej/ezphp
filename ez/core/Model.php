@@ -154,11 +154,14 @@ class Model
     public function findPage($page = 10, $where = null, $max = 9, $columns = '*', $join = null)
     {
         /* 总数，页数计算 */
-        $p     = !empty(filter_input(INPUT_GET, 'p')) ? intval(filter_input(INPUT_GET, 'p')) : 1;
+        $p      = !empty(filter_input(INPUT_GET, 'p')) ? intval(filter_input(INPUT_GET, 'p')) : 1;
+        $cwhere = $where;
+        unset($cwhere['ORDER']);
+        unset($cwhere['GROUP']);
         if(empty($join)) {
-            $count = $this->count($where);
+            $count = $this->count($cwhere);
         } else {
-            $count = $this->count($join, $columns, $where);
+            $count = $this->count($join, $columns, $cwhere);
         }
         if($count == 0) {
             return [
