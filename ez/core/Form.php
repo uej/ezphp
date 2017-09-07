@@ -34,7 +34,7 @@ class Form
             $str .= $k . filter_input($method, $k);
         }
         
-        if (sha1($str) == filter_input($method, $signKey)) {
+        if (sha1(config('inputSign').$str) == $signKey) {
             return TRUE;
         } else {
             return FALSE;

@@ -78,11 +78,13 @@ class Controller
                 $this->templateVariable = array_merge($this->templateVariable, $data);
                 extract($this->templateVariable);
             }
-            
+            if (empty($view)) {
+                $view = ACTION_NAME;
+            }
             if (is_file($view)) {
                 include $view;
             } else {
-                $template = '../view/' . strtolower(CONTROLLER_NAME) . '/' . strtolower(ACTION_NAME) . '.php';
+                $template = '../view/' . strtolower(CONTROLLER_NAME) . '/' . strtolower($view) . '.php';
                 if(!is_file($template)) {
                     throw new \Exception('template not exists');
                 }
