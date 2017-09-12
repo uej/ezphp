@@ -76,6 +76,7 @@ return [
     /* 表单签名密匙 */
     'inputSign'         => '0123456',
     
+    'route'             => '',                          // 路由配置，可开启自定义路由，例如：\example\core\Route
 ];
 
 
