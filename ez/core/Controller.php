@@ -107,7 +107,26 @@ class Controller
     public function redirect($url, $params = [], $delay = 0, $msg='')
     {
         $url = Route::createUrl($url, $params);
-        Route::redirect($url,$delay,$msg);
+        Route::redirect($url, $delay, $msg);
+    }
+    
+    /**
+     * 成功跳转
+     * 
+     * @access public
+     */
+    public function success($msg = '', $delay = 1) {
+        $url = filter_input(INPUT_SERVER, 'HTTP_REFERER');
+        Route::redirect($url, $delay, $msg);
+    }
+    
+    /**
+     * 失败跳转
+     * 
+     * @access public
+     */
+    public function error($msg = "") {
+        
     }
     
     /**

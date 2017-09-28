@@ -13,6 +13,7 @@ class IndexController extends Controller
     {
         
         $Test = new \example\model\TestModel();
+        $this->redirect('up');
         die('www');
         $data = $Test->query("insert cmf_test (Value, Num) values ('加速的飒飒', '3')");
         var_dump($data);
@@ -26,7 +27,10 @@ class IndexController extends Controller
     }
     
     public function up() {
-        $Upload = new \ez\driver\Upload();
-        $Upload->doUpload();
+        if(empty($_GET)) {
+            echo '<a href="/index.php/index/up.html?a=12">adsd</a>';
+        } else {
+            $this->success('sadassa', 10);
+        }
     }
 }
