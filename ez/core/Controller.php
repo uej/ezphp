@@ -125,8 +125,23 @@ class Controller
      * 
      * @access public
      */
-    public function error($msg = "") {
-        
+    public function error($msg = "", $delay = 5) {
+        $html = '<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+                <html xmlns="http://www.w3.org/1999/xhtml">
+                <head>
+                <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+                <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+                <meta name="robots" content="all" />
+                <title>错误</title>
+                <script>
+                    function Jump() { window.location.href = "javascript:history.back(-1);"; }
+                    document.onload = setTimeout("Jump()" , ' . $delay . ' * 1000);
+                </script>
+                </head>
+                <body>';
+        $html .= "错误：$msg<br>$delay"."秒后跳转，<a href='javascript:history.back(-1);'>立即返回</a>";
+        $html .= "</body></html>";
+        die($html);
     }
     
     /**

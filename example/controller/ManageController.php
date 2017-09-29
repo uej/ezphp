@@ -2,6 +2,7 @@
 namespace example\controller;
 use ez\core\Controller;
 use ez\core\Session;
+use ez\core\Model;
 
 /**
  * 框架管理器
@@ -9,6 +10,12 @@ use ez\core\Session;
  * @author lxj
  */
 class ManageController extends Controller {
+    
+    /**
+     * 数据表管理model
+     */
+    public $table;
+    
     
     /**
      * 初始化登录检查
@@ -20,6 +27,8 @@ class ManageController extends Controller {
         if (ACTION_NAME != 'login' && !Session::get('manage')) {
             die('Controller is not exist');
         }
+        
+        $this->table = new Model('tables');
     }
     
     /**
@@ -36,7 +45,7 @@ class ManageController extends Controller {
             if ($post['Name'] == 'lxj2233' && $post['Password'] == $pwd) {
                 $this->redirect('index');
             } else {
-                $this->
+                $this->error('something error!');
             }
         }
     }
@@ -47,7 +56,7 @@ class ManageController extends Controller {
      * @access public
      */
     public function index() {
-        
+        $tables = $this->table->findPage(10);
     }
     
     /**

@@ -30,7 +30,7 @@ class IndexController extends Controller
         if(empty($_GET)) {
             echo '<a href="/index.php/index/up.html?a=12">adsd</a>';
         } else {
-            $this->success('sadassa', 10);
+            $this->error('sadassa', 10);
         }
     }
 }
