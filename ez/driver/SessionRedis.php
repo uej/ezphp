@@ -86,7 +86,8 @@ class SessionRedis
      *
      * @access public
      */
-    public function close() {
+    public function close()
+    {
         if (session_id() != '') {
             session_write_close();        
         }
@@ -100,7 +101,8 @@ class SessionRedis
      * @param string $sessionId
      * @return bool|void
      */
-    public function destroy($sessionId) {
+    public function destroy($sessionId) 
+    {
         return $this->redis->delete(config('redisSessionPrefix') . $sessionId);
     }
     
@@ -110,7 +112,8 @@ class SessionRedis
      * @param string $lifetime
      * @return bool
      */
-    public function gc($lifetime) {
+    public function gc($lifetime) 
+    {
         return true;
     }
 }

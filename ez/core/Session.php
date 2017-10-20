@@ -36,12 +36,16 @@ class Session
             foreach ($key as $k => $v) {
                 $_SESSION[$k] = $v;
             }
-            return;
+            return TRUE;
         }
         
         if (is_string($key) && !empty($key)) {
             $_SESSION[$key] = $value;
-            return;
+            return TRUE;
+        }
+        
+        if ($key === NULL) {
+            $_SESSION = [];
         }
         
         return FALSE;

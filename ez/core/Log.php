@@ -29,7 +29,7 @@ class Log
     {
         $runtimePath = SITE_PATH . '/../runtime';
         if (!is_dir($runtimePath)) {
-            mkdir($pathname, 0777, TRUE) || 0;
+            mkdir($runtimePath, 0777, TRUE) || 0;
         }
         
         $todayLogPath = SITE_PATH . '/../runtime/logs/' . date('Ym');
@@ -50,7 +50,7 @@ class Log
 //                3, 
 //                SITE_PATH . '/../runtime/logs/' . date('Ym') . '/' . date('Ymd') . '.log');
         file_put_contents(SITE_PATH . '/../runtime/logs/' . date('Ym') . '/' . date('Ymd') . '.log', 
-                date('Y-m-d H:i:s ') . $msg . '\r\n',
+                date('Y-m-d H:i:s ') . $msg . "\n",
                 FILE_APPEND);
     }
 }

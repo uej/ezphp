@@ -13,7 +13,7 @@ abstract class Session
      * 
      * @access public
      */
-    public function __construct() 
+    public function __construct()
     {
 		if (config('sessionAutoStart')) {
 			$this->init();

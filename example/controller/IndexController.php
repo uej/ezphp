@@ -9,11 +9,27 @@ use ez\core\Controller;
  */
 class IndexController extends Controller
 {
-    public function index() {
-        $Test = new \ez\core\Model('test');
-        //$data = $Test->update(['Num' => 'sadasdasssssssssssssssssssssssssssssss爱神的箭'], ['ID' => 1]);
-        $data = $Test->insert([''])
+    public function index()
+    {
+        
+        $Test = new \example\model\TestModel();
+        
+        $data = $Test->get('Value', ['ID' => 13]);
         var_dump($data);
-        var_dump($Test->last());
+//        $data = $Test->insert([''])
+//        $data = $Test->findPage(5);
+        
+//        $Page = new \ez\core\Page($Test->count(), 5);
+        
+//        $this->display();
+        
+    }
+    
+    public function up() {
+//        if(empty($_GET)) {
+//            echo '<a href="/index.php/index/up.html?a=12">adsd</a>';
+//        } else {
+//            $this->error('sadassa', 10);
+//        }
     }
 }
