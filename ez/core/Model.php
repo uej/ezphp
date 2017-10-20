@@ -9,7 +9,7 @@ namespace ez\core;
 class Model
 {
     /**
-     * 表名，带前缀
+     * 表名，不带前缀
      */
     public $tableName;
     
@@ -28,6 +28,11 @@ class Model
      */
     public $fieldCheckRule;
     
+    /**
+     * 表前缀
+     */
+    public $tablePrefix;
+    
     
     
     /**
@@ -42,7 +47,8 @@ class Model
             throw new Exception("no tableName");
         }
         
-        $this->trueTableName = config('dbPrefix') . $this->tableName;
+        $this->tablePrefix   = config('dbPrefix');
+        $this->trueTableName = $this->tablePrefix . $this->tableName;
     }
     
     /**

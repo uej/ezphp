@@ -13,9 +13,8 @@ class IndexController extends Controller
     {
         
         $Test = new \example\model\TestModel();
-        $this->redirect('up');
-        die('www');
-        $data = $Test->query("insert cmf_test (Value, Num) values ('加速的飒飒', '3')");
+        
+        $data = $Test->get('Value', ['ID' => 13]);
         var_dump($data);
 //        $data = $Test->insert([''])
 //        $data = $Test->findPage(5);
@@ -27,10 +26,10 @@ class IndexController extends Controller
     }
     
     public function up() {
-        if(empty($_GET)) {
-            echo '<a href="/index.php/index/up.html?a=12">adsd</a>';
-        } else {
-            $this->error('sadassa', 10);
-        }
+//        if(empty($_GET)) {
+//            echo '<a href="/index.php/index/up.html?a=12">adsd</a>';
+//        } else {
+//            $this->error('sadassa', 10);
+//        }
     }
 }
