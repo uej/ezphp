@@ -1,6 +1,7 @@
 <?php
 namespace example\controller;
 use ez\core\Controller;
+use ez\core\Route;
 
 /**
  * 示例控制器
@@ -9,27 +10,19 @@ use ez\core\Controller;
  */
 class IndexController extends Controller
 {
-    public function index()
-    {
-        
-        $Test = new \example\model\TestModel();
-        
-        $data = $Test->get('Value', ['ID' => 13]);
-        var_dump($data);
-//        $data = $Test->insert([''])
-//        $data = $Test->findPage(5);
-        
-//        $Page = new \ez\core\Page($Test->count(), 5);
-        
-//        $this->display();
-        
+    public function index() {
+        if(empty($_GET)) {
+            echo '<a href="'.Route::createUrl('index', ['d' => 'sds']).'">adsd</a>';
+        } else {
+            $this->success('操作成功');
+        }
     }
     
     public function up() {
-//        if(empty($_GET)) {
-//            echo '<a href="/index.php/index/up.html?a=12">adsd</a>';
-//        } else {
-//            $this->error('sadassa', 10);
-//        }
+        if(empty($_GET)) {
+            echo '<a href="'.Route::createUrl('up', ['d' => 'sds']).'">adsd</a>';
+        } else {
+            $this->error('操作失败', 60);
+        }
     }
 }

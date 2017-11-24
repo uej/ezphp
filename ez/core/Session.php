@@ -30,9 +30,9 @@ class Session
      * @param mixed $value Session值
      * @return bool 设置结果
      */
-    public static function set($key = '', $value = NULL)
+    public static function set($key, $value = NULL)
     {
-        if (is_array($key)) {
+        if (is_array($key) && empty($value)) {
             foreach ($key as $k => $v) {
                 $_SESSION[$k] = $v;
             }
@@ -41,6 +41,11 @@ class Session
         
         if (is_string($key) && !empty($key)) {
             $_SESSION[$key] = $value;
+            return TRUE;
+        }
+        
+        if (is_string($key) && empty($key)) {
+            $_SESSION[$key] = NULL;
             return TRUE;
         }
         

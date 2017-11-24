@@ -9,14 +9,14 @@ namespace ez\core;
 class Controller
 {
     /**
-	 * 模板文件路径
-	 */
-	public $templateDir;
-	
-	/**
-	 * 模板后缀名
-	 */
-	public $suffix;
+     * 模板文件路径
+     */
+    public $templateDir;
+
+    /**
+     * 模板后缀名
+     */
+    public $suffix;
     
     /**
      * 模板变量
@@ -32,7 +32,7 @@ class Controller
     public function __construct()
     {
         $this->suffix = config('templateSuffix');
-		$this->templateDir = '../view/' . strtolower(CONTROLLER_NAME) . '/';
+        $this->templateDir = '../view/' . strtolower(CONTROLLER_NAME) . '/';
     }
     
     /**
@@ -76,8 +76,9 @@ class Controller
         } else if (is_string($view)) {
             if (is_array($data) && !empty($data)) {
                 $this->templateVariable = array_merge($this->templateVariable, $data);
-                extract($this->templateVariable);
             }
+            extract($this->templateVariable);
+            
             if (empty($view)) {
                 $view = ACTION_NAME;
             }
@@ -116,8 +117,16 @@ class Controller
      * @access public
      */
     public function success($msg = '', $delay = 1) {
-        $url = filter_input(INPUT_SERVER, 'HTTP_REFERER');
-        Route::redirect($url, $delay, $msg);
+        if (!isset($this->templateVariable['jumpUrl'])) {
+            $url = filter_input(INPUT_SERVER, 'HTTP_REFERER');
+            $this->assign('jumpUrl', $url);
+        }
+        
+        $this->assign('message', $msg);
+        $this->assign('status', 1);
+        $this->assign('waitSecond', $delay);
+        $this->display(__DIR__.'/../template/success.php');
+        die;
     }
     
     /**
@@ -126,22 +135,15 @@ class Controller
      * @access public
      */
     public function error($msg = "", $delay = 5) {
-        $html = '<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
-                <html xmlns="http://www.w3.org/1999/xhtml">
-                <head>
-                <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-                <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
-                <meta name="robots" content="all" />
-                <title>错误</title>
-                <script>
-                    function Jump() { window.location.href = "javascript:history.back(-1);"; }
-                    document.onload = setTimeout("Jump()" , ' . $delay . ' * 1000);
-                </script>
-                </head>
-                <body>';
-        $html .= "错误：$msg<br>$delay"."秒后跳转，<a href='javascript:history.back(-1);'>立即返回</a>";
-        $html .= "</body></html>";
-        die($html);
+        if (!isset($this->templateVariable['jumpUrl'])) {
+            $this->assign('jumpUrl', "javascript:history.back(-1);");
+        }
+        
+        $this->assign('message', $msg);
+        $this->assign('status', 0);
+        $this->assign('waitSecond', $delay);
+        $this->display(__DIR__.'/../template/success.php');
+        die;
     }
     
     /**

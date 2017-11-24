@@ -40,17 +40,16 @@ class Route
     {
         /* url重写 */
         if (config('urlRewrite')) {
-            $script_name = isset($_SERVER['ORIG_SCRIPT_NAME']) ? $_SERVER['ORIG_SCRIPT_NAME'] : $_SERVER['SCRIPT_NAME'];
-            if (isset($_SERVER['REDIRECT_PATH_INFO']) && !empty($_SERVER['REDIRECT_PATH_INFO'])) {
-                $pathinfo = trim(str_replace(Config('urlSuffix'), '', $_SERVER['REDIRECT_PATH_INFO']), '/');
+            if (isset($_SERVER['REDIRECT_PATH_INFO']) && !empty(filter_input(INPUT_SERVER, 'REDIRECT_PATH_INFO'))) {
+                $pathinfo = trim(str_replace(Config('urlSuffix'), '', filter_input(INPUT_SERVER, 'REDIRECT_PATH_INFO')), '/');
                 $param = explode('/', $pathinfo);
-            } elseif (isset($_SERVER['PATH_INFO']) && !empty($_SERVER['PATH_INFO'])) {
-                $param = explode('/', trim(str_replace(Config('urlSuffix'), '', $_SERVER['PATH_INFO']), '/'));
+            } elseif (isset($_SERVER['PATH_INFO']) && !empty(filter_input(INPUT_SERVER, 'PATH_INFO'))) {
+                $param = explode('/', trim(str_replace(Config('urlSuffix'), '', filter_input(INPUT_SERVER, 'PATH_INFO')), '/'));
             }
             
         } else {
-            if(isset($_SERVER['PATH_INFO']) && !empty($_SERVER['PATH_INFO'])) {
-                $param = explode('/', trim(str_replace(Config('urlSuffix'), '', $_SERVER['PATH_INFO']), '/'));
+            if(isset($_SERVER['PATH_INFO']) && !empty(filter_input(INPUT_SERVER, 'PATH_INFO'))) {
+                $param = explode('/', trim(str_replace(Config('urlSuffix'), '', filter_input(INPUT_SERVER, 'PATH_INFO')), '/'));
             } else {
                 $param = [];
             }
@@ -99,9 +98,9 @@ class Route
         if (is_array($params) && !empty($params)) {
             foreach ($params as $key => $value) {
                 if (strpos($get, '?') !== FALSE) {
-                    $get .= "&$key=$value";
+                    $get .= "&$key=" . urlencode($value);
                 } else {
-                    $get .= "?$key=$value";
+                    $get .= "?$key=" . urlencode($value);
                 }
             }
         }

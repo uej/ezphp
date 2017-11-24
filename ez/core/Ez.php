@@ -16,18 +16,18 @@ class Ez
     public static function _init()
     {
         /* PHP版本检测 */
-		if (version_compare(PHP_VERSION, '5.4.0', '<')) {
+        if (version_compare(PHP_VERSION, '5.4.0', '<')) {
             header("Content-type:text/html;charset=utf-8");
-			die('PHP版过低! 运行系统必须大于5.4。谢谢合作!');
-		}
+            die('PHP版过低! 运行系统必须大于5.4。谢谢合作!');
+        }
         
         set_error_handler(['\\ez\\core\\Error', 'errorHandler']);
         set_exception_handler(['\\ez\\core\\Error', 'exceptionHandler']);
         
         /* 是否开启面压缩 */
-		if(config('openGzip')) {
-			ob_start('ob_gzhandler');
-		}
+        if(config('openGzip')) {
+            ob_start('ob_gzhandler');
+        }
         
         /* session驱动 */
         if (config('sessionAutoStart')) {
@@ -48,17 +48,17 @@ class Ez
         date_default_timezone_set(config('timeZone'));
         
         /* 常量设置 */
-        if( !defined('HTTPHOST') ) {
-            if(!isset($_SERVER['HTTPS']) || empty($_SERVER['HTTPS']) || $_SERVER['HTTPS']=='off') {
-                define('HTTPHOST',   'http://'.$_SERVER['HTTP_HOST']);
+        if (!defined('HTTPHOST')) {
+            if(!isset($_SERVER['HTTPS']) || empty(filter_input(INPUT_SERVER, 'HTTPS')) || filter_input(INPUT_SERVER, 'HTTPS')=='off') {
+                define('HTTPHOST', 'http://'.filter_input(INPUT_SERVER, 'HTTP_HOST'));
             } else {
-                define('HTTPHOST',   'https://'.$_SERVER['HTTP_HOST']);
+                define('HTTPHOST', 'https://'.filter_input(INPUT_SERVER, 'HTTP_HOST'));
             }
         }
-        if(!defined('__CSS__'))     define('__CSS__',    HTTPHOST.'/css');
-        if(!defined('__JS__'))      define('__JS__',     HTTPHOST.'/js');
-        if(!defined('__IMG__'))     define('__IMG__',    HTTPHOST.'/images');
-        if(!defined('__VIDEO__'))   define('__VIDEO__',  HTTPHOST.'/videos');
+        if (!defined('__CSS__'))    define('__CSS__',    HTTPHOST.'/css');
+        if (!defined('__JS__'))     define('__JS__',     HTTPHOST.'/js');
+        if (!defined('__IMG__'))    define('__IMG__',    HTTPHOST.'/images');
+        if (!defined('__VIDEO__'))  define('__VIDEO__',  HTTPHOST.'/videos');
     }
     
     /**
@@ -75,7 +75,10 @@ class Ez
         } catch (Exception $ex) {
             Log::addLog($ex->__toString());
         }
-        ob_flush();
+        
+        if(config('openGzip')) {
+            ob_end_flush();
+        }
     }
 }
 
