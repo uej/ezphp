@@ -36,7 +36,7 @@ class Upload {
     /**
      * 上传结果
      */
-    public $result = [];
+    public $result = ['code' => 0];
     
     
     /**
@@ -114,28 +114,28 @@ class Upload {
         
         /* 是否是允许的扩展名 */
         if (strpos($this->exts, $ext) === FALSE) {
-            $this->result['code'] = '1';
+            $this->result['code'] = -1;
             $this->result['msg']  = "不允许的文件扩展名";
             return $this->result;
         }
 
         /* 是否是允许的文件类型 */
         if (strpos($this->types, $type) === FALSE) {
-            $this->result['code'] = '2';
+            $this->result['code'] = -2;
             $this->result['msg']  = "不允许的文件类型";
             return $this->result;
         }
 
         /* 是否在允许的最大上传文件范围内 */
         if ($size > $this->size) {
-            $this->result['code'] = '3';
+            $this->result['code'] = -3;
             $this->result['msg']  = "文件过大，限制" . sprintf('%.2f', $this->size/1024/1024) . "MB";
             return $this->result;
         }
 
         /* 判断是否选择了上传文件 */
         if ($size == 0) {
-            $this->result['code'] = '4';
+            $this->result['code'] = -4;
             $this->result['msg']  = "文件大小为0";
             return $this->result;
         }
@@ -149,6 +149,9 @@ class Upload {
     public function doUpload()
     {
         $this->check();
+        if ($this->result['code'] < 0) {
+            return $this->result;
+        }
         
         $targetDir = $this->path . 'upload_tmp/';
         $uploadDir = $this->path . date('Ymd') . '/';
