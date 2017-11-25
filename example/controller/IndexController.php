@@ -31,9 +31,10 @@ class IndexController extends Controller
     }
     
     public function doup() {
-        var_dump($_FILES);die;
+//        die(json_encode(['code' => -1, 'msg' => 'ssdsa萨芬']));
+        
         $Up = new \ez\driver\Upload();
         $res = $Up->doUpload();
-        die(json_encode($res));
+        die(json_encode($res, JSON_UNESCAPED_UNICODE));
     }
 }

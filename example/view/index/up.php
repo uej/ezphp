@@ -27,7 +27,7 @@
 </div>
 
 <form action="<?= \ez\core\Route::createUrl('index/doup')?>" method="post" enctype="multipart/form-data">
-    <input name="userfile" type="file" />
+    <input name="file" type="file" />
     <input type="submit" value="Send File" />
 </form>
 
@@ -50,7 +50,14 @@ var uploader = WebUploader.create({
     chunkSize: 4096 * 1024,
 
     // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
-    resize: false
+    resize: false,
+    
+    // 单个文件大小限制
+//    fileSingleSizeLimit: 1024*1024*50,
+    
+    // 文件个数限制
+    fileNumLimit: 10,
+    
 });
 
 uploader.on( 'fileQueued', function( file ) {
@@ -62,8 +69,8 @@ uploader.on( 'fileQueued', function( file ) {
 });
 
 uploader.on( 'uploadProgress', function( file, percentage ) {
-    var $li = $( '#'+file.id ),
-        $percent = $li.find('.progress .progress-bar');
+    var $li = $( '#'+file.id );
+    $percent = $li.find('.progress .progress-bar');
 
     // 避免重复创建
     if ( !$percent.length ) {
@@ -72,14 +79,26 @@ uploader.on( 'uploadProgress', function( file, percentage ) {
           '</div>' +
         '</div>').appendTo( $li ).find('.progress-bar');
     }
-
-    $li.find('p.state').text('上传中');
+    var jindu = percentage * 100;
+    $li.find('p.state').text('上传中' + jindu.toFixed(2) + '%');
 
     $percent.css( 'width', percentage * 100 + '%' );
 });
 
-uploader.on( 'uploadSuccess', function( file ) {
-    $( '#'+file.id ).find('p.state').text('已上传');
+uploader.on('uploadAccept', function(objj, res) {
+    if(res.code == 1 || res.code == 0) {
+        return true;
+    } else {
+        return false;
+    }
+});
+
+uploader.on( 'uploadSuccess', function(file, response) {
+    if(response.code == 0) {
+        $( '#'+file.id ).find('p.state').text('已上传');
+    } else {
+        $( '#'+file.id ).find('p.state').text('上传出错');
+    }
 });
 
 uploader.on( 'uploadError', function( file ) {
