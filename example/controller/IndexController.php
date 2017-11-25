@@ -18,11 +18,22 @@ class IndexController extends Controller
         }
     }
     
-    public function up() {
+    public function t2() {
         if(empty($_GET)) {
             echo '<a href="'.Route::createUrl('up', ['d' => 'sds']).'">adsd</a>';
         } else {
             $this->error('操作失败', 60);
         }
+    }
+    
+    public function up() {
+        $this->display();
+    }
+    
+    public function doup() {
+        var_dump($_FILES);die;
+        $Up = new \ez\driver\Upload();
+        $res = $Up->doUpload();
+        die(json_encode($res));
     }
 }

@@ -1,0 +1,136 @@
+2017-11-25 17:28:25 Exception: not exist Controller in E:\github\EZ\ez\core\Application.php:44
+Stack trace:
+#0 E:\github\EZ\ez\core\Ez.php(74): ez\core\Application->run()
+#1 E:\github\EZ\example\web\index.php(22): ez\core\Ez::start()
+#2 {main}
+2017-11-25 17:30:52 ErrorLevel:8, E_NOTICE: Undefined index: file in E:\github\EZ\ez\driver\Upload.php at line 110
+2017-11-25 17:30:52 ErrorLevel:8, E_NOTICE: Undefined index: file in E:\github\EZ\ez\driver\Upload.php at line 112
+2017-11-25 17:30:52 ErrorLevel:8, E_NOTICE: Undefined index: file in E:\github\EZ\ez\driver\Upload.php at line 113
+2017-11-25 17:30:52 ErrorLevel:2, E_WARNING: strpos(): Empty needle in E:\github\EZ\ez\driver\Upload.php at line 116
+2017-11-25 17:31:03 ErrorLevel:8, E_NOTICE: Undefined index: file in E:\github\EZ\ez\driver\Upload.php at line 110
+2017-11-25 17:31:03 ErrorLevel:8, E_NOTICE: Undefined index: file in E:\github\EZ\ez\driver\Upload.php at line 112
+2017-11-25 17:31:03 ErrorLevel:8, E_NOTICE: Undefined index: file in E:\github\EZ\ez\driver\Upload.php at line 113
+2017-11-25 17:31:03 ErrorLevel:2, E_WARNING: strpos(): Empty needle in E:\github\EZ\ez\driver\Upload.php at line 116
+2017-11-25 17:34:50 ErrorLevel:8, E_NOTICE: Undefined index: file in E:\github\EZ\ez\driver\Upload.php at line 110
+2017-11-25 17:34:50 ErrorLevel:8, E_NOTICE: Undefined index: file in E:\github\EZ\ez\driver\Upload.php at line 112
+2017-11-25 17:34:50 ErrorLevel:8, E_NOTICE: Undefined index: file in E:\github\EZ\ez\driver\Upload.php at line 113
+2017-11-25 17:34:50 ErrorLevel:2, E_WARNING: strpos(): Empty needle in E:\github\EZ\ez\driver\Upload.php at line 116
+2017-11-25 17:35:03 ErrorLevel:8, E_NOTICE: Undefined index: file in E:\github\EZ\ez\driver\Upload.php at line 110
+2017-11-25 17:35:03 ErrorLevel:8, E_NOTICE: Undefined index: file in E:\github\EZ\ez\driver\Upload.php at line 112
+2017-11-25 17:35:03 ErrorLevel:8, E_NOTICE: Undefined index: file in E:\github\EZ\ez\driver\Upload.php at line 113
+2017-11-25 17:35:03 ErrorLevel:2, E_WARNING: strpos(): Empty needle in E:\github\EZ\ez\driver\Upload.php at line 116
+2017-11-25 18:52:51 Exception: not exist Controller in E:\github\EZ\ez\core\Application.php:44
+Stack trace:
+#0 E:\github\EZ\ez\core\Ez.php(74): ez\core\Application->run()
+#1 E:\github\EZ\example\web\index.php(22): ez\core\Ez::start()
+#2 {main}
+2017-11-25 18:52:51 Exception: not exist Controller in E:\github\EZ\ez\core\Application.php:44
+Stack trace:
+#0 E:\github\EZ\ez\core\Ez.php(74): ez\core\Application->run()
+#1 E:\github\EZ\example\web\index.php(22): ez\core\Ez::start()
+#2 {main}
+2017-11-25 18:52:52 Exception: not exist Controller in E:\github\EZ\ez\core\Application.php:44
+Stack trace:
+#0 E:\github\EZ\ez\core\Ez.php(74): ez\core\Application->run()
+#1 E:\github\EZ\example\web\index.php(22): ez\core\Ez::start()
+#2 {main}
+2017-11-25 18:52:53 Exception: not exist Controller in E:\github\EZ\ez\core\Application.php:44
+Stack trace:
+#0 E:\github\EZ\ez\core\Ez.php(74): ez\core\Application->run()
+#1 E:\github\EZ\example\web\index.php(22): ez\core\Ez::start()
+#2 {main}
+2017-11-25 18:52:53 Exception: not exist Controller in E:\github\EZ\ez\core\Application.php:44
+Stack trace:
+#0 E:\github\EZ\ez\core\Ez.php(74): ez\core\Application->run()
+#1 E:\github\EZ\example\web\index.php(22): ez\core\Ez::start()
+#2 {main}
+2017-11-25 18:52:54 Exception: not exist Controller in E:\github\EZ\ez\core\Application.php:44
+Stack trace:
+#0 E:\github\EZ\ez\core\Ez.php(74): ez\core\Application->run()
+#1 E:\github\EZ\example\web\index.php(22): ez\core\Ez::start()
+#2 {main}
+2017-11-25 18:52:55 Exception: not exist Controller in E:\github\EZ\ez\core\Application.php:44
+Stack trace:
+#0 E:\github\EZ\ez\core\Ez.php(74): ez\core\Application->run()
+#1 E:\github\EZ\example\web\index.php(22): ez\core\Ez::start()
+#2 {main}
+2017-11-25 18:52:55 Exception: not exist Controller in E:\github\EZ\ez\core\Application.php:44
+Stack trace:
+#0 E:\github\EZ\ez\core\Ez.php(74): ez\core\Application->run()
+#1 E:\github\EZ\example\web\index.php(22): ez\core\Ez::start()
+#2 {main}
+2017-11-25 18:52:56 Exception: not exist Controller in E:\github\EZ\ez\core\Application.php:44
+Stack trace:
+#0 E:\github\EZ\ez\core\Ez.php(74): ez\core\Application->run()
+#1 E:\github\EZ\example\web\index.php(22): ez\core\Ez::start()
+#2 {main}
+2017-11-25 18:52:58 Exception: not exist Controller in E:\github\EZ\ez\core\Application.php:44
+Stack trace:
+#0 E:\github\EZ\ez\core\Ez.php(74): ez\core\Application->run()
+#1 E:\github\EZ\example\web\index.php(22): ez\core\Ez::start()
+#2 {main}
+2017-11-25 18:52:58 Exception: not exist Controller in E:\github\EZ\ez\core\Application.php:44
+Stack trace:
+#0 E:\github\EZ\ez\core\Ez.php(74): ez\core\Application->run()
+#1 E:\github\EZ\example\web\index.php(22): ez\core\Ez::start()
+#2 {main}
+2017-11-25 18:52:59 Exception: not exist Controller in E:\github\EZ\ez\core\Application.php:44
+Stack trace:
+#0 E:\github\EZ\ez\core\Ez.php(74): ez\core\Application->run()
+#1 E:\github\EZ\example\web\index.php(22): ez\core\Ez::start()
+#2 {main}
+2017-11-25 18:52:59 Exception: not exist Controller in E:\github\EZ\ez\core\Application.php:44
+Stack trace:
+#0 E:\github\EZ\ez\core\Ez.php(74): ez\core\Application->run()
+#1 E:\github\EZ\example\web\index.php(22): ez\core\Ez::start()
+#2 {main}
+2017-11-25 18:52:59 Exception: not exist Controller in E:\github\EZ\ez\core\Application.php:44
+Stack trace:
+#0 E:\github\EZ\ez\core\Ez.php(74): ez\core\Application->run()
+#1 E:\github\EZ\example\web\index.php(22): ez\core\Ez::start()
+#2 {main}
+2017-11-25 18:53:00 Exception: not exist Controller in E:\github\EZ\ez\core\Application.php:44
+Stack trace:
+#0 E:\github\EZ\ez\core\Ez.php(74): ez\core\Application->run()
+#1 E:\github\EZ\example\web\index.php(22): ez\core\Ez::start()
+#2 {main}
+2017-11-25 18:53:01 Exception: not exist Controller in E:\github\EZ\ez\core\Application.php:44
+Stack trace:
+#0 E:\github\EZ\ez\core\Ez.php(74): ez\core\Application->run()
+#1 E:\github\EZ\example\web\index.php(22): ez\core\Ez::start()
+#2 {main}
+2017-11-25 18:53:01 Exception: not exist Controller in E:\github\EZ\ez\core\Application.php:44
+Stack trace:
+#0 E:\github\EZ\ez\core\Ez.php(74): ez\core\Application->run()
+#1 E:\github\EZ\example\web\index.php(22): ez\core\Ez::start()
+#2 {main}
+2017-11-25 18:53:02 Exception: not exist Controller in E:\github\EZ\ez\core\Application.php:44
+Stack trace:
+#0 E:\github\EZ\ez\core\Ez.php(74): ez\core\Application->run()
+#1 E:\github\EZ\example\web\index.php(22): ez\core\Ez::start()
+#2 {main}
+2017-11-25 18:53:03 Exception: not exist Controller in E:\github\EZ\ez\core\Application.php:44
+Stack trace:
+#0 E:\github\EZ\ez\core\Ez.php(74): ez\core\Application->run()
+#1 E:\github\EZ\example\web\index.php(22): ez\core\Ez::start()
+#2 {main}
+2017-11-25 18:53:04 Exception: not exist Controller in E:\github\EZ\ez\core\Application.php:44
+Stack trace:
+#0 E:\github\EZ\ez\core\Ez.php(74): ez\core\Application->run()
+#1 E:\github\EZ\example\web\index.php(22): ez\core\Ez::start()
+#2 {main}
+2017-11-25 18:53:04 Exception: not exist Controller in E:\github\EZ\ez\core\Application.php:44
+Stack trace:
+#0 E:\github\EZ\ez\core\Ez.php(74): ez\core\Application->run()
+#1 E:\github\EZ\example\web\index.php(22): ez\core\Ez::start()
+#2 {main}
+2017-11-25 18:55:44 Exception: not exist Controller in E:\github\EZ\ez\core\Application.php:44
+Stack trace:
+#0 E:\github\EZ\ez\core\Ez.php(74): ez\core\Application->run()
+#1 E:\github\EZ\example\web\index.php(22): ez\core\Ez::start()
+#2 {main}
+2017-11-25 18:55:45 Exception: not exist Controller in E:\github\EZ\ez\core\Application.php:44
+Stack trace:
+#0 E:\github\EZ\ez\core\Ez.php(74): ez\core\Application->run()
+#1 E:\github\EZ\example\web\index.php(22): ez\core\Ez::start()
+#2 {main}

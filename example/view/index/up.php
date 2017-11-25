@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title></title>
+<title>up</title>
 <!--<script src="/js/webuploader/webuploader.html5only.min.js" type="text/javascript"></script>
 <script src="/js/webuploader/diyUpload.js" type="text/javascript"></script>-->
 <script src="/js/jquery-3.1.1.js" type="text/javascript"></script>
-<link href="/js/diyUpload/css/webuploader.css" rel="stylesheet" type="text/css"/>
-<script src="/js/diyUpload/js/webuploader.html5only.min.js" type="text/javascript"></script>
-<script src="/js/diyUpload/js/diyUpload.js" type="text/javascript"></script>
+<link href="/js/webuploader/webuploader.css" rel="stylesheet" type="text/css"/>
+<script src="/js/webuploader/webuploader.min.js" type="text/javascript"></script>
+
 </head>
 <body>
 <style>
@@ -26,35 +26,28 @@
     </div>
 </div>
 
-<!--<div id="box">
-	<div id="test"></div>
-</div>
+<form action="<?= \ez\core\Route::createUrl('index/doup')?>" method="post" enctype="multipart/form-data">
+    <input name="userfile" type="file" />
+    <input type="submit" value="Send File" />
+</form>
 
-<div id="demo">
-	<div id="as" ></div>
-</div>-->
-</body>
 <script type="text/javascript">
 
 var uploader = WebUploader.create({
 
 //    auto: true,
-
+    swf: '<?=HTTPHOST?>/js/Uploader.swf',
     // 文件接收服务端。
-    server: '<?=\ez\core\Route::createUrl('index/up')?>',
+    server: '<?=\ez\core\Route::createUrl('index/doup')?>',
 
     // 选择文件的按钮。可选。
     // 内部根据当前运行是创建，可能是input元素，也可能是flash.
-    pick: {
-        id: '#picker',
-        innerHTML: '点击选择图片',
-        multiple: true
-    },
+    pick: '#picker',
 
     // 开启分片上传
-    chunked:true,
+    chunked: true,
     // 分片大小
-    chunkSize:512 * 1024,
+    chunkSize: 4096 * 1024,
 
     // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
     resize: false

@@ -116,28 +116,28 @@ class Upload {
 		if (strpos($this->exts, $ext) === FALSE) {
             $this->result['code'] = '1';
             $this->result['msg']  = "不允许的文件扩展名";
-			die(json_encode($this->result));
+			return $this->result;
 		}
 
 		/* 是否是允许的文件类型 */
 		if (strpos($this->types, $type) === FALSE) {
             $this->result['code'] = '2';
             $this->result['msg']  = "不允许的文件类型";
-			die(json_encode($this->result));
+			return $this->result;
 		}
 
 		/* 是否在允许的最大上传文件范围内 */
 		if ($size > $this->size) {
             $this->result['code'] = '3';
             $this->result['msg']  = "文件过大，限制" . sprintf('%.2f', $this->size/1024/1024) . "MB";
-			die(json_encode($this->result));
+			return $this->result;
 		}
 
 		/* 判断是否选择了上传文件 */
 		if ($size == 0) {
             $this->result['code'] = '4';
             $this->result['msg']  = "文件大小为0";
-			die(json_encode($this->result));
+			return $this->result;
 		}
     }
     
@@ -167,7 +167,7 @@ class Upload {
         } else {
             $this->result['code'] = 5;
             $this->result['msg']  = "没有上传文件";
-            die(json_encode($this->result));
+            return $this->result;
         }
 
         $saveName   = md5($fileName . mt_rand(0, 99999) . microtime(TRUE) . \ez\core\Network::get_ip()) . ".$this->ext";
@@ -182,26 +182,26 @@ class Upload {
         if (!$out = @fopen("{$filePath}_{$chunk}.parttmp", "wb")) {
             $this->result['code'] = 6;
             $this->result['msg']  = "服务器内部异常";
-            die(json_encode($this->result));
+            return $this->result;
         }
 
         if (!empty($_FILES)) {
             if ($_FILES["file"]["error"] || !is_uploaded_file($_FILES["file"]["tmp_name"])) {
                 $this->result['code'] = -1;
                 $this->result['msg']  = "文件上传失败";
-                die(json_encode($this->result));
+                return $this->result;
             }
 
             // Read binary input stream and append it to temp file
             if (!$in = @fopen($_FILES["file"]["tmp_name"], "rb")) {
                 $this->result['code'] = -1;
                 $this->result['msg']  = "文件上传失败";
-                die(json_encode($this->result));
+                return $this->result;
             }
         } else {
             $this->result['code'] = -1;
             $this->result['msg']  = "文件上传失败";
-            die(json_encode($this->result));
+            return $this->result;
         }
 
         while ($buff = fread($in, 4096)) {
@@ -225,7 +225,7 @@ class Upload {
             if (!$out = @fopen($uploadPath, "wb")) {
                 $this->result['code'] = 6;
                 $this->result['msg']  = "服务器内部异常";
-                die(json_encode($this->result));
+                return $this->result;
             }
 
             if (flock($out, LOCK_EX)) {
@@ -249,7 +249,7 @@ class Upload {
 
         $this->result['code'] = 0;
         $this->result['msg']  = "上传成功";
-        die(json_encode($this->result));
+        return $this->result;
     }
     
 }
