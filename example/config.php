@@ -6,7 +6,7 @@
  */
 return [
     /* 是否开启调试 */
-    'debug'             => TRUE,
+    'debug'             => 1,
     
     /* 数据库配置 */
     'dbType'            => 'mysql',

@@ -37,4 +37,22 @@ class IndexController extends Controller
         $res = $Up->doUpload();
         die(json_encode($res, JSON_UNESCAPED_UNICODE));
     }
+    
+    public function verify() {
+        if(empty($_GET)) {
+            $this->display();
+        } else {
+            $verify = new \ez\driver\VerifyCode(['imageH' => 55, 'imageW' => 200, 'useZh' => 1, 'useCurve' => 0]);
+            $verify->entry('qcode');
+        }
+    }
+    
+    public function checkVerify() {
+        $verify = new \ez\driver\VerifyCode();
+        if($verify->check(filter_input(INPUT_POST, 'VerifyCode'), 'qcode')) {
+            echo '1';
+        } else {
+            echo '0';
+        }
+    }
 }

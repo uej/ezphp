@@ -16,7 +16,7 @@ class Error
     public static function showError($error)
     {
         header("Content-type:text/html;charset=utf-8");
-        die($error);
+        die("<pre>$error</pre>");
     }
     
     /**
