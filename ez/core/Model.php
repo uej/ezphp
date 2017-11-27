@@ -258,22 +258,22 @@ class Model
             }
             
             $html .= '<span class="turnto">转到</span>
-            <input id="jump_page" class="textInput" value="" style="width:30px;" maxlength="10" type="text">
-            <span class="turnto">页</span>
-            <a href="javascript:void(0)" onclick="jumppage()">GO</a>
-            <script>
-                function jumppage() {
-                    var hrefPageNo = document.getElementById("jump_page");
-                    var hrefPageNoValue = hrefPageNo.value;
-                    var pattern = /^\d+$/;
-                    if(pattern.test(hrefPageNoValue) && hrefPageNoValue>0 && hrefPageNoValue<='.$pages.') {
-                        window.location.href="'.$url.'p="+hrefPageNoValue;
-                    } else {
-                        alert("页数输入不合法");
-                        hrefPageNo.focus();
-                    }
-                }
-            </script>';
+<input id="jump_page" class="textInput" value="" style="width:30px;" maxlength="10" type="text">
+<span class="turnto">页</span>
+<a href="javascript:void(0)" onclick="jumppage()">GO</a>
+<script>
+    function jumppage() {
+        var hrefPageNo = document.getElementById("jump_page");
+        var hrefPageNoValue = hrefPageNo.value;
+        var pattern = /^\d+$/;
+        if(pattern.test(hrefPageNoValue) && hrefPageNoValue>0 && hrefPageNoValue<='.$pages.') {
+            window.location.href="'.$url.'p="+hrefPageNoValue;
+        } else {
+            alert("页数输入不合法");
+            hrefPageNo.focus();
+        }
+    }
+</script>';
         }
         
         return [
@@ -312,7 +312,7 @@ class Model
         
         $res = $this->checkColumns($arr);
         if ($res) {
-            return $arr;
+            return $res;
         } else {
             return FALSE;
         }
@@ -332,13 +332,14 @@ class Model
         }
         
         if (empty($this->fieldCheckRule)) {
-            return TRUE;
+            return $arr;
         }
         
         if (!is_array($this->fieldCheckRule)) {
             $this->error = "Model::fieldCheckRule must be array";
             return FALSE;
         }
+        
         foreach ($arr as $key => $val) {
             if (isset($this->fieldCheckRule[$key])) {
                 switch ($this->fieldCheckRule[$key]['type']) {
@@ -353,11 +354,20 @@ class Model
                             $this->error = $this->fieldCheckRule[$key]['errorMsg'];
                             return FALSE;
                         }
+                        break;
+                    case 'handle':
+                        $val = call_user_func($this->fieldCheckRule[$key]['method'], $val);
+                        if (!$val) {
+                            $this->error = $this->fieldCheckRule[$key]['errorMsg'];
+                            return FALSE;
+                        }
+                        $arr[$key] = $val;
+                        break;
                 }
             }
         }
         
-        return TRUE;
+        return $arr;
     }
     
 }

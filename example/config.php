@@ -26,18 +26,18 @@ return [
     /* 从数据库 */
     'dbSlave'           => [
         [
-            'dbHost'            => '',
-            'dbName'            => '',
-            'dbUser'            => '',
-            'dbPassword'        => '',
-            'dbPort'            => 3306,
+            'dbHost'        => '',
+            'dbName'        => '',
+            'dbUser'        => '',
+            'dbPassword'    => '',
+            'dbPort'        => 3306,
         ],
         [
-            'dbHost'            => '',
-            'dbName'            => '',
-            'dbUser'            => '',
-            'dbPassword'        => '',
-            'dbPort'            => 3306,
+            'dbHost'        => '',
+            'dbName'        => '',
+            'dbUser'        => '',
+            'dbPassword'    => '',
+            'dbPort'        => 3306,
         ],
     ],
     
