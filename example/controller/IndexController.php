@@ -11,7 +11,7 @@ use ez\core\Route;
 class IndexController extends Controller
 {
     public function index() {
-        if(empty($_GET)) {
+        if(empty($_GET['asdasda'])) {
             echo '<a href="'.Route::createUrl('index', ['d' => 'sds']).'">adsd</a>';
         } else {
             $this->success('操作成功');

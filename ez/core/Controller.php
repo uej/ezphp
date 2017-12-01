@@ -9,17 +9,17 @@ namespace ez\core;
 class Controller
 {
     /**
-     * 模板文件路径
+     * @var string 模板文件路径
      */
     public $templateDir;
 
     /**
-     * 模板后缀名
+     * @var string 模板后缀名
      */
     public $suffix;
     
     /**
-     * 模板变量
+     * @var array 模板变量
      */
     public $templateVariable = [];
     

@@ -38,10 +38,10 @@ class Application
             if(method_exists($controller, $action)) {
                 $controller->$action();
             } else {
-                throw new \Exception('not exist Action');
+                throw new \Exception('not exist Action ' . ACTION_NAME);
             }
         } else {
-            throw new \Exception('not exist Controller');
+            throw new \Exception('not exist Controller ' . CONTROLLER_NAME);
         }
     }
     

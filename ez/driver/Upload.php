@@ -9,32 +9,32 @@ namespace ez\driver;
 class Upload {
     
     /**
-     * 文件后缀
+     * @var string 文件后缀
      */
     public $ext;
     
     /**
-     * 允许文件后缀
+     * @var string 允许文件后缀
      */
     public $exts;
     
     /**
-     * 允许文件类型
+     * @var string 允许文件类型
      */
     public $types;
     
     /**
-     * 允许上传文件大小
+     * @var integer 允许上传文件大小
      */
     public $size;
     
     /**
-     * 文件长传路径
+     * @var string 文件长传路径
      */
     public $path;
     
     /**
-     * 上传结果
+     * @var array 上传结果
      */
     public $result = ['code' => 0];
     
@@ -42,9 +42,10 @@ class Upload {
     /**
      * 构造函数
      * 
+     * @param array $conf 上传配置数组
      * @access public
      */
-    public function __construct()
+    public function __construct($conf = [])
     {
         set_time_limit(0);
         
@@ -60,10 +61,10 @@ class Upload {
             exit;
         }
         
-        $this->exts     = config('uploadExts');
-        $this->types    = config('uploadTypes');
-        $this->size     = config('uploadSize');
-        $this->path     = config('uploadPath');
+        $this->exts     = isset($conf['uploadExts']) ? $conf['uploadExts'] : config('uploadExts');
+        $this->types    = isset($conf['uploadTypes']) ? $conf['uploadTypes'] : config('uploadTypes');
+        $this->size     = isset($conf['uploadSize']) ? $conf['uploadSize'] : config('uploadSize');
+        $this->path     = isset($conf['uploadPath']) ? $conf['uploadPath'] : config('uploadPath');
     }
     
     /**

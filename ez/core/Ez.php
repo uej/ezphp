@@ -21,8 +21,8 @@ class Ez
             die('PHP版过低! 运行系统必须大于5.4。谢谢合作!');
         }
         
-        set_error_handler(['\\ez\\core\\Error', 'errorHandler']);
-        set_exception_handler(['\\ez\\core\\Error', 'exceptionHandler']);
+        set_error_handler(["\\ez\\core\\Error", "errorHandler"]);
+        set_exception_handler(["\\ez\\core\\Error", "exceptionHandler"]);
         
         /* 是否开启面压缩 */
         if(config('openGzip')) {
