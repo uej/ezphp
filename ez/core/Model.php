@@ -21,7 +21,7 @@ class Model
     /**
      * 错误信息
      */
-    public $error;
+    public $error = "操作失败";
     
     /**
      * 字段验证规则
@@ -157,7 +157,7 @@ class Model
      * @param mixed $join 链表查询设置
      * @return array 数据结果  [ 'data'=>数据数组, 'pages'=>总页数, 'count'=>数据总条数, 'html'=>分页html代码 ]
      */
-    public function findPage($page = 10, $where = null, $max = 9, $columns = '*', $join = null)
+    public function findPage($page = 10, $max = 9, $columns = '*', $where = null, $join = null)
     {
         /* 总数，页数计算 */
         $p      = !empty(filter_input(INPUT_GET, 'p')) ? intval(filter_input(INPUT_GET, 'p')) : 1;

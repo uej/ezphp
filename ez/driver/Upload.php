@@ -36,7 +36,7 @@ class Upload {
     /**
      * @var array 上传结果
      */
-    public $result = ['code' => 0];
+    public $result;
     
     
     /**
