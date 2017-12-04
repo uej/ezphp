@@ -344,9 +344,16 @@ class Model
             if (isset($this->fieldCheckRule[$key])) {
                 switch ($this->fieldCheckRule[$key]['type']) {
                     case 'function':
-                        if (!call_user_func($this->fieldCheckRule[$key]['method'], $val)) {
-                            $this->error = $this->fieldCheckRule[$key]['errorMsg'];
-                            return FALSE;
+                        if (empty($this->fieldCheckRule[$key]['method'])) {
+                            if (empty($val)) {
+                                $this->error = $this->fieldCheckRule[$key]['errorMsg'];
+                                return FALSE;
+                            }
+                        } else {
+                            if (!call_user_func($this->fieldCheckRule[$key]['method'], $val)) {
+                                $this->error = $this->fieldCheckRule[$key]['errorMsg'];
+                                return FALSE;
+                            }
                         }
                         break;
                     case 'pattern':
