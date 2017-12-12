@@ -218,8 +218,10 @@ class Medoo
 
             if (!config('dbDistributede') || $type == 1 || $this->transaction) {
                 $_link[0] = new PDO($dsn, $options[ 'dbUser' ], $options[ 'dbPassword' ], $this->option);
+                $_link[0]->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
             } else {
                 $_link[1] = new PDO($dsn, $options[ 'dbUser' ], $options[ 'dbPassword' ], $this->option);
+                $_link[1]->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
             }
             
             if (!config('dbDistributede') || $type == 1 || $this->transaction) {
