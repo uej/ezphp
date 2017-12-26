@@ -108,7 +108,7 @@ class Model
             $result = call_user_func_array([$medoo, $name], $arguments);
             return $result;
         } else {
-            throw new Exception('Method not exists');
+            throw new \Exception('Method not exists');
         }
     }
     
@@ -150,11 +150,11 @@ class Model
     /**
      * 分页查找
      * 
-     * @param mixed $columns 查询字段
      * @param int $page 每页展示条数
      * @param int $max 最多展示页数
      * @param mixed $columns 查询字段
-     * @param mixed $join 链表查询设置
+     * @param array $where 查询条件
+     * @param mixed $join 连表查询设置
      * @return array 数据结果  [ 'data'=>数据数组, 'pages'=>总页数, 'count'=>数据总条数, 'html'=>分页html代码 ]
      */
     public function findPage($page = 10, $max = 9, $columns = '*', $where = null, $join = null)
@@ -340,6 +340,96 @@ class Model
             return FALSE;
         }
         
+        /**
+         * $this->fieldCheckRule对应字段的验证规则
+         *      type        => 三种验证类型：function（函数返回等价于true通过验证）、pattern（正则匹配）、handle（操作改变数据值）
+         *      method      => type in [function, handle]时填写
+         *      pattern     => type in [pattern]时填写
+         *      match       => type in [pattern]时填写，(默认)匹配成功通过验证为true，匹配失败通过验证为false 
+         *      must        => 等价于true时必须验证，否则在值不为空时才验证
+         *      errorMsg    => 不通过验证的错误消息
+         */
+        foreach ($arr as $key => $val) {
+            if (isset($this->fieldCheckRule[$key])) {
+                switch ($this->fieldCheckRule[$key]['type']) {
+                    case 'function':
+                        if (!empty($val) || !empty($this->fieldCheckRule[$key]['must'])) {
+                            if (empty($this->fieldCheckRule[$key]['method'])) {
+                                if (empty($val)) {
+                                    $this->error = $this->fieldCheckRule[$key]['errorMsg'];
+                                    return FALSE;
+                                }
+                            } else {
+                                if (!call_user_func($this->fieldCheckRule[$key]['method'], $val)) {
+                                    $this->error = $this->fieldCheckRule[$key]['errorMsg'];
+                                    return FALSE;
+                                }
+                            }
+                        }
+                        break;
+                    case 'pattern':
+                        if (!empty($val) || !empty($this->fieldCheckRule[$key]['must'])) {
+                            if (empty($this->fieldCheckRule[$key]['match'])) {
+                                if (!preg_match($this->fieldCheckRule[$key]['pattern'], $val)) {
+                                    $this->error = $this->fieldCheckRule[$key]['errorMsg'];
+                                    return FALSE;
+                                }
+                            } else {
+                                if (preg_match($this->fieldCheckRule[$key]['pattern'], $val)) {
+                                    $this->error = $this->fieldCheckRule[$key]['errorMsg'];
+                                    return FALSE;
+                                }
+                            }
+                        }
+                        break;
+                    case 'handle':
+                        if (!empty($val) || !empty($this->fieldCheckRule[$key]['must'])) {
+                            $val = call_user_func($this->fieldCheckRule[$key]['method'], $val);
+                            if (!$val) {
+                                $this->error = $this->fieldCheckRule[$key]['errorMsg'];
+                                return FALSE;
+                            }
+                            $arr[$key] = $val;
+                        }
+                        break;
+                }
+            }
+        }
+        
+        return $arr;
+    }
+    
+    
+    /**
+     * 字段验证强制验证版，无论是否为空都验证
+     * 
+     * @param mixed $arr 待验证字段数组
+     * @return boolen 验证成功返回true，否则返回false
+     * @access public
+     */
+    public function checkColumnsM($arr) {
+        if (empty($arr)) {
+            $this->error = "数据为空";
+            return FALSE;
+        }
+        
+        if (empty($this->fieldCheckRule)) {
+            return $arr;
+        }
+        
+        if (!is_array($this->fieldCheckRule)) {
+            $this->error = "Model::fieldCheckRule must be array";
+            return FALSE;
+        }
+        
+        /**
+         * $this->fieldCheckRule对应字段的验证规则
+         *      type        => 三种验证类型：function（函数返回等价于true通过验证）、pattern（正则匹配）、handle（操作改变数据值）
+         *      method      => type in [function, handle]时填写
+         *      pattern     => type in [pattern]时填写
+         *      match       => type in [pattern]时填写，(默认)匹配成功通过验证为true，匹配失败通过验证为false 
+         *      errorMsg    => 不通过验证的错误消息
+         */
         foreach ($arr as $key => $val) {
             if (isset($this->fieldCheckRule[$key])) {
                 switch ($this->fieldCheckRule[$key]['type']) {
@@ -357,9 +447,16 @@ class Model
                         }
                         break;
                     case 'pattern':
-                        if (!preg_match($this->fieldCheckRule[$key]['pattern'], $val)) {
-                            $this->error = $this->fieldCheckRule[$key]['errorMsg'];
-                            return FALSE;
+                        if (empty($this->fieldCheckRule[$key]['match'])) {
+                            if (!preg_match($this->fieldCheckRule[$key]['pattern'], $val)) {
+                                $this->error = $this->fieldCheckRule[$key]['errorMsg'];
+                                return FALSE;
+                            }
+                        } else {
+                            if (preg_match($this->fieldCheckRule[$key]['pattern'], $val)) {
+                                $this->error = $this->fieldCheckRule[$key]['errorMsg'];
+                                return FALSE;
+                            }
                         }
                         break;
                     case 'handle':
