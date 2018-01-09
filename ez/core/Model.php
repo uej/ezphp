@@ -9,27 +9,27 @@ namespace ez\core;
 class Model
 {
     /**
-     * 表名，不带前缀
+     * @var string 表名，不带前缀
      */
     public $tableName;
     
     /**
-     * 真实表名，带前缀
+     * @var string 真实表名，带前缀
      */
     public $trueTableName;
     
     /**
-     * 错误信息
+     * @var string 错误信息
      */
     public $error = "操作失败";
     
     /**
-     * 字段验证规则
+     * @var string 字段验证规则
      */
     public $fieldCheckRule;
     
     /**
-     * 表前缀
+     * @var string 表前缀
      */
     public $tablePrefix;
     
@@ -398,80 +398,6 @@ class Model
         
         return $arr;
     }
-    
-    
-    /**
-     * 字段验证强制验证版，无论是否为空都验证
-     * 
-     * @param mixed $arr 待验证字段数组
-     * @return boolen 验证成功返回true，否则返回false
-     * @access public
-     */
-    public function checkColumnsM($arr) {
-        if (empty($arr)) {
-            $this->error = "数据为空";
-            return FALSE;
-        }
-        
-        if (empty($this->fieldCheckRule)) {
-            return $arr;
-        }
-        
-        if (!is_array($this->fieldCheckRule)) {
-            $this->error = "Model::fieldCheckRule must be array";
-            return FALSE;
-        }
-        
-        /**
-         * $this->fieldCheckRule对应字段的验证规则
-         *      type        => 三种验证类型：function（函数返回等价于true通过验证）、pattern（正则匹配）、handle（操作改变数据值）
-         *      method      => type in [function, handle]时填写
-         *      pattern     => type in [pattern]时填写
-         *      match       => type in [pattern]时填写，(默认)匹配成功通过验证为true，匹配失败通过验证为false 
-         *      errorMsg    => 不通过验证的错误消息
-         */
-        foreach ($arr as $key => $val) {
-            if (isset($this->fieldCheckRule[$key])) {
-                switch ($this->fieldCheckRule[$key]['type']) {
-                    case 'function':
-                        if (empty($this->fieldCheckRule[$key]['method'])) {
-                            if (empty($val)) {
-                                $this->error = $this->fieldCheckRule[$key]['errorMsg'];
-                                return FALSE;
-                            }
-                        } else {
-                            if (!call_user_func($this->fieldCheckRule[$key]['method'], $val)) {
-                                $this->error = $this->fieldCheckRule[$key]['errorMsg'];
-                                return FALSE;
-                            }
-                        }
-                        break;
-                    case 'pattern':
-                        if (empty($this->fieldCheckRule[$key]['match'])) {
-                            if (!preg_match($this->fieldCheckRule[$key]['pattern'], $val)) {
-                                $this->error = $this->fieldCheckRule[$key]['errorMsg'];
-                                return FALSE;
-                            }
-                        } else {
-                            if (preg_match($this->fieldCheckRule[$key]['pattern'], $val)) {
-                                $this->error = $this->fieldCheckRule[$key]['errorMsg'];
-                                return FALSE;
-                            }
-                        }
-                        break;
-                    case 'handle':
-                        $val = call_user_func($this->fieldCheckRule[$key]['method'], $val);
-                        if (!$val) {
-                            $this->error = $this->fieldCheckRule[$key]['errorMsg'];
-                            return FALSE;
-                        }
-                        $arr[$key] = $val;
-                        break;
-                }
-            }
-        }
-        
-        return $arr;
-    }
+
     
 }
