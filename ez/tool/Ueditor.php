@@ -20,19 +20,11 @@ class Ueditor
      * @param array $path 路径设置
      * @access public
      */
-    public function __construct($path = NULL) 
+    public function __construct($path = NULL)
     {
         header("Content-Type: text/html; charset=utf-8");
 
-        $this->CONFIG = json_decode(preg_replace("/\/\*[\s\S]+?\*\//", "", file_get_contents("../config/config.json")), true);
-        isset($path['imagePathFormat']) && $this->CONFIG['imagePathFormat'] = "data/uploads/ueditor/images/{yyyy}{mm}{dd}/{time}{rand:6}";
-        isset($path['scrawlPathFormat']) && $this->CONFIG['scrawlPathFormat'] = "data/uploads/ueditor/images/{yyyy}{mm}{dd}/{time}{rand:6}";
-        isset($path['snapscreenPathFormat']) && $this->CONFIG['snapscreenPathFormat'] = "data/uploads/ueditor/images/{yyyy}{mm}{dd}/{time}{rand:6}";
-        isset($path['catcherPathFormat']) && $this->CONFIG['catcherPathFormat'] = "data/uploads/ueditor/images/{yyyy}{mm}{dd}/{time}{rand:6}";
-        isset($path['videoPathFormat']) && $this->CONFIG['videoPathFormat'] = "data/uploads/ueditor/video/{yyyy}{mm}{dd}/{time}{rand:6}";
-        isset($path['filePathFormat']) && $this->CONFIG['filePathFormat']  = "data/uploads/ueditor/file/{yyyy}{mm}{dd}/{time}{rand:6}";
-        isset($path['imageManagerListPath']) && $this->CONFIG['imageManagerListPath'] = "data/uploads/ueditor/images/";
-        isset($path['fileManagerListPath']) && $this->CONFIG['imageManagerListPath'] = "data/uploads/ueditor/file/";
+        $this->CONFIG = json_decode(preg_replace("/\/\*[\s\S]+?\*\//", "", file_get_contents("../config/ueditor.json")), true);
         $action = $_GET['action'];
 
         switch ($action) {

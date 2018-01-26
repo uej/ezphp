@@ -9,27 +9,27 @@ namespace ez\core;
 class Model
 {
     /**
-     * @var string 表名，不带前缀
+     * 表名，不带前缀
      */
     public $tableName;
     
     /**
-     * @var string 真实表名，带前缀
+     * 真实表名，带前缀
      */
     public $trueTableName;
     
     /**
-     * @var string 错误信息
+     * 错误信息
      */
     public $error = "操作失败";
     
     /**
-     * @var string 字段验证规则
+     * 字段验证规则
      */
     public $fieldCheckRule;
     
     /**
-     * @var string 表前缀
+     * 表前缀
      */
     public $tablePrefix;
     
@@ -44,7 +44,7 @@ class Model
     {
         $this->tableName = empty($table) ? $this->tableName : $table;
         if (empty($this->tableName)) {
-            throw new Exception("no tableName");
+            throw new \Exception("no tableName");
         }
         
         $this->tablePrefix   = config('dbPrefix');
@@ -140,8 +140,8 @@ class Model
     public function query($sql)
     {
         $this->makeMedoo()->query($sql);
-        if ($this->makeMedoo()->statement->errorCode() === '00000') {
-            return TRUE;
+        if ($this->statement->errorCode() === '00000') {
+            return $this->statement;
         } else {
             return FALSE;
         }
@@ -167,7 +167,7 @@ class Model
         if(empty($join)) {
             $count = $this->count($cwhere);
         } else {
-            $count = $this->count($join, $columns, $cwhere);
+            $count = $this->count($join, '*', $cwhere);
         }
         if($count == 0) {
             return [
@@ -306,7 +306,7 @@ class Model
         }
         foreach ($data as $key => $val) {
             if (in_array($key, $keys)) {
-                $arr[$key] = trim($val);
+                $arr[$key] = htmlspecialchars(trim($val));      // 全局转换html元素
             }
         }
         
@@ -345,7 +345,7 @@ class Model
          *      type        => 三种验证类型：function（函数返回等价于true通过验证）、pattern（正则匹配）、handle（操作改变数据值）
          *      method      => type in [function, handle]时填写
          *      pattern     => type in [pattern]时填写
-         *      match       => type in [pattern]时填写，(默认)匹配成功通过验证为true，匹配失败通过验证为false 
+         *      match       => type in [pattern]时填写，匹配成功通过验证为true，(默认)匹配失败通过验证为false 
          *      must        => 等价于true时必须验证，否则在值不为空时才验证
          *      errorMsg    => 不通过验证的错误消息
          */
@@ -353,7 +353,7 @@ class Model
             if (isset($this->fieldCheckRule[$key])) {
                 switch ($this->fieldCheckRule[$key]['type']) {
                     case 'function':
-                        if (!empty($val) || !empty($this->fieldCheckRule[$key]['must'])) {
+                        if (!empty($val) || $this->fieldCheckRule[$key]['must']) {
                             if (empty($this->fieldCheckRule[$key]['method'])) {
                                 if (empty($val)) {
                                     $this->error = $this->fieldCheckRule[$key]['errorMsg'];
@@ -368,14 +368,14 @@ class Model
                         }
                         break;
                     case 'pattern':
-                        if (!empty($val) || !empty($this->fieldCheckRule[$key]['must'])) {
+                        if (!empty($val) || $this->fieldCheckRule[$key]['must']) {
                             if (empty($this->fieldCheckRule[$key]['match'])) {
-                                if (!preg_match($this->fieldCheckRule[$key]['pattern'], $val)) {
+                                if (preg_match($this->fieldCheckRule[$key]['pattern'], $val)) {
                                     $this->error = $this->fieldCheckRule[$key]['errorMsg'];
                                     return FALSE;
                                 }
                             } else {
-                                if (preg_match($this->fieldCheckRule[$key]['pattern'], $val)) {
+                                if (!preg_match($this->fieldCheckRule[$key]['pattern'], $val)) {
                                     $this->error = $this->fieldCheckRule[$key]['errorMsg'];
                                     return FALSE;
                                 }
@@ -383,7 +383,7 @@ class Model
                         }
                         break;
                     case 'handle':
-                        if (!empty($val) || !empty($this->fieldCheckRule[$key]['must'])) {
+                        if (!empty($val) || $this->fieldCheckRule[$key]['must']) {
                             $val = call_user_func($this->fieldCheckRule[$key]['method'], $val);
                             if (!$val) {
                                 $this->error = $this->fieldCheckRule[$key]['errorMsg'];
@@ -398,6 +398,5 @@ class Model
         
         return $arr;
     }
-
     
 }

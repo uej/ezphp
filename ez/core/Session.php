@@ -14,8 +14,12 @@ class Session
      * @param string $key Session键
      * @return mixed Session值
      */
-    public static function get($key)
+    public static function get($key = NULL)
     {
+        if (empty($key)) {
+            return $_SESSION;
+        }
+        
         if (!is_string($key) || empty($key) || !isset($_SESSION[$key])) {
             return NULL;
         }
@@ -39,12 +43,12 @@ class Session
             return TRUE;
         }
         
-        if (is_string($key) && !empty($key)) {
+        if (is_string($key) && $key !== NULL) {
             $_SESSION[$key] = $value;
             return TRUE;
         }
         
-        if (is_string($key) && empty($key)) {
+        if (is_string($key) && $value === NULL) {
             $_SESSION[$key] = NULL;
             return TRUE;
         }

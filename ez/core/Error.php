@@ -34,7 +34,7 @@ class Error
             include config('errorPage');
             die;
         }
-        die;
+        die('<h1>施工现场，请返回</h1>');
     }
     
     /**
