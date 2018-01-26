@@ -34,7 +34,7 @@ class Error
             include config('errorPage');
             die;
         }
-        die('<h1>施工现场，请返回</h1>');
+        die('<h1>施工现场，<a href="'.Route::createUrl().'">返回首页</a></h1>');
     }
     
     /**
