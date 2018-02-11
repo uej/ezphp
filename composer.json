@@ -5,15 +5,15 @@
     "type": "library",
     "license": "MIT",
     "authors": [
-		{"name": "lxj", "email": "my2233@foxmail.com"}
-	],
+        {"name": "lxj", "email": "my2233@foxmail.com"}
+    ],
     "require": {
-		"php": ">=5.4"
-	},
+        "php": ">=5.4"
+    },
     "autoload": {
-		"psr-4": {
-			"EZ\\": "/framework"
-		}
-	},
+        "psr-4": {
+            "EZ\\": "/framework"
+        }
+    },
     "version": "v1.0.0"
 }
