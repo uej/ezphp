@@ -15,7 +15,7 @@ class Application
      */
     public function __construct()
     {
-        if(empty($config['route'])) {
+        if (empty($config['route'])) {
             new Route();
         } else {
             $route = $config['route'];
@@ -32,10 +32,10 @@ class Application
     {
         $controllerName = '\\' . APP_NAME . '\\controller\\' . ucfirst(CONTROLLER_NAME) . 'Controller';
 
-        if(class_exists($controllerName)) {
+        if (class_exists($controllerName)) {
             $controller = new $controllerName();
             $action = ACTION_NAME;
-            if(method_exists($controller, $action)) {
+            if (method_exists($controller, $action)) {
                 $controller->$action();
             } else {
                 throw new \Exception('not exist Action ' . ACTION_NAME);
