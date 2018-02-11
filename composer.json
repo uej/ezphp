@@ -12,8 +12,7 @@
     },
     "autoload": {
         "psr-4": {
-            "EZ\\": "/framework"
+            "EZ\\": "/ez"
         }
-    },
-    "version": "v1.0.0"
+    }
 }
