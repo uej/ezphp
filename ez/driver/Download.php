@@ -1,5 +1,5 @@
 <?php
-namespace ez\driver;
+namespace ezphp\driver;
 
 /**
  * 下载类，支持断点续传

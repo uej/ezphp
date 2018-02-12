@@ -1,5 +1,5 @@
 <?php
-namespace ez\core;
+namespace ezphp\core;
 
 /**
  * 框架错误异常显示类

@@ -1,5 +1,5 @@
 <?php
-namespace ez\driver;
+namespace ezphp\driver;
 
 /**
  * 文件长传类，支持分段上传

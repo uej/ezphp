@@ -1,5 +1,5 @@
 {
-    "name": "uej/ez",
+    "name": "uej/ezphp",
     "description": "Ezphp is a simple php framework",
     "keywords": ["ez", "framework", "ezphp", "simple framework"],
     "type": "library",
@@ -12,7 +12,7 @@
     },
     "autoload": {
         "psr-4": {
-            "EZ\\": "ez/"
+            "EZ\\": "/ez"
         }
     }
 }

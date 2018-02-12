@@ -1,5 +1,5 @@
 <?php
-namespace ez\core;
+namespace ezphp\core;
 
 /**
  * 数据模型类
@@ -56,16 +56,49 @@ class Model
      * 
      * @access public
      */
-    public function makeMedoo()
+    public function makeMedoo($type = 1)
     {
-        static $medoo = '';
+        static $medoo   = [];
         
-        if (!empty($medoo)) {
-            return $medoo;
+        if ($type == 1) {
+            if (!empty($medoo[0])) {
+                return $medoo[0];
+            } else {
+                $master = array_rand(Ez::config('dbMaster'));
+                $option = [
+                    'database_type' => Ez::config('dbType'),
+                    'database_name' => $master['dbName'],
+                    'server'        => $master['dbHost'],
+                    'username'      => $master['dbUser'],
+                    'password'      => $master['dbPassword'],
+                    'charset'       => Ez::config('dbCharset'),
+                    'port'          => $master['dbPort'],
+                    'prefix'        => Ez::config('dbPrefix'),
+                ];
+                
+                $medoo[0]   = new Medoo($option);
+                return $medoo[0];
+            }
+        } else {
+            if (!empty($medoo[1])) {
+                return $medoo[1];
+            } else {
+                $slave  = array_rand(Ez::config('dbSlave'));
+                $option = [
+                    'database_type' => Ez::config('dbType'),
+                    'database_name' => $slave['dbName'],
+                    'server'        => $slave['dbHost'],
+                    'username'      => $slave['dbUser'],
+                    'password'      => $slave['dbPassword'],
+                    'charset'       => Ez::config('dbCharset'),
+                    'port'          => $slave['dbPort'],
+                    'prefix'        => Ez::config('dbPrefix'),
+                ];
+                
+                $medoo[1]   = new Medoo($option);
+                return $medoo[1];
+            }
         }
-        
-        $medoo = new Medoo();
-        return $medoo;
     }
     
     /**
@@ -77,57 +110,63 @@ class Model
     public function __call($name, $arguments)
     {
         if (in_array($name, [
-                'id', 
+                'id',
                 'action',
                 'quote',
                 'debug',
+            ])) {
+            $medoo  = $this->makeMedoo(1);
+            return call_user_func_array([$medoo, $name], $arguments);
+            
+        } else if (in_array($name, [
                 'error',
                 'log',
                 'last',
-                'info'
-                ])) {
-            $medoo = $this->makeMedoo();
-            $result = call_user_func_array([$medoo, $name], $arguments);
-            return $result;
+                'info',
+            ])) {
+            
+            if (Ez::config('dbDistributede') === 0) {
+                $medoo  = $this->makeMedoo(1);
+                return call_user_func_array([$medoo, $name], $arguments);
+            } else {
+                $medoo1 = $this->makeMedoo(1);
+                $medoo2 = $this->makeMedoo(2);
+                return [
+                    0   => call_user_func_array([$medoo1, $name], $arguments),
+                    1   => call_user_func_array([$medoo2, $name], $arguments),
+                ];
+            }
+            
         } else if (in_array($name, [
                 'delete',
+                'insert',
+                'replace',
+                'update',
+            ])) {
+            $medoo  = $this->makeMedoo(1);
+            array_unshift($arguments, $this->tableName);
+            return call_user_func_array([$medoo, $name], $arguments);
+            
+        } else if (in_array($name, [
                 'get', 
                 'max',
                 'min',
                 'avg',
                 'has',
                 'count',
-                'insert',
-                'replace',
                 'select',
                 'sum',
-                'update',
-                ])) {
-            $medoo = $this->makeMedoo();
+            ])) {
+            if (Ez::config('dbDistributede') === 0) {
+                $medoo = $this->makeMedoo(1);
+            } else {
+                $medoo = $this->makeMedoo(2);
+            }
             array_unshift($arguments, $this->tableName);
-            $result = call_user_func_array([$medoo, $name], $arguments);
-            return $result;
+            return call_user_func_array([$medoo, $name], $arguments);
+            
         } else {
             throw new \Exception('Method not exists');
-        }
-    }
-    
-    /**
-     * 访问pdo数据库连接
-     * 
-     * @param $name 访问的属性
-     * @access public
-     */
-    public function __get($name)
-    {
-        if ($name == 'pdo') {
-            return $this->makeMedoo()->connect();
-        } else if ($name == 'statement') {
-            return $this->makeMedoo()->statement;
-        } else if ($name == 'medoo') {
-            return $this->makeMedoo();
-        } else {
-            throw new \Exception('Attribute not exists');
         }
     }
     
@@ -137,11 +176,12 @@ class Model
      * @param string $sql
      * @return boolean
      */
-    public function query($sql)
+    public function query($sql, $map = [])
     {
-        $this->makeMedoo()->query($sql);
-        if ($this->statement->errorCode() === '00000') {
-            return $this->statement;
+        $medoo  = $this->makeMedoo(1);
+        $medoo->query($sql, $map);
+        if ($medoo->statement->errorCode() === '00000') {
+            return $medoo->statement;
         } else {
             return FALSE;
         }
@@ -164,12 +204,12 @@ class Model
         $cwhere = $where;
         unset($cwhere['ORDER']);
         unset($cwhere['GROUP']);
-        if(empty($join)) {
+        if (empty($join)) {
             $count = $this->count($cwhere);
         } else {
             $count = $this->count($join, '*', $cwhere);
         }
-        if($count == 0) {
+        if ($count == 0) {
             return [
                 'data'      => [],
                 'pages'     => 1,
@@ -178,15 +218,15 @@ class Model
             ];
         }
         $pages = ceil($count/$page);
-        if( $max > $pages ) {
+        if ( $max > $pages ) {
             $max = $pages;
         }
         $p > $pages && $p = $pages;
         
-        if( empty($p) || $p < 0 ) {
+        if ( empty($p) || $p < 0 ) {
             $p     = 1;
             $start = 0;
-        } else if( $p > $pages ) { 
+        } else if ( $p > $pages ) { 
             $start = ($pages-1) * $page;
         } else {
             $start = (intval($p) - 1) * $page;
@@ -194,12 +234,12 @@ class Model
         is_array($where) ? $where = array_merge( $where, [ 'LIMIT' =>  [$start, $page] ] ) : $where = [ 'LIMIT' =>  [$start, $page] ];
         
         /* 数据 */
-        if(empty($join)) {
+        if (empty($join)) {
             $data = $this->select($columns, $where);
         } else {
             $data = $this->select($join, $columns, $where);
         }
-        if(!$data) {
+        if (!$data) {
             return FALSE;
         }
         
@@ -207,32 +247,32 @@ class Model
         $parameter      = filter_input_array(INPUT_GET);
         
         /* 分页html生成 */
-        if($pages > 1) {
+        if ($pages > 1) {
             $html  = '<span class="total">共'.$count.'条，'.$pages.'页</span>';
-            if( empty($p) || $p == 1 ) {
+            if (empty($p) || $p == 1) {
                 $html .= '<span class="disabled">上一页</span>';
             } else {
                 $params = $parameter;
                 $params['p'] = $p-1;
                 $html .= '<a href="'.Route::createUrl(ACTION_NAME, $params).'">上一页</a>';
             }
-            if( $p > ceil($max/2) ) {
+            if ($p > ceil($max/2)) {
                 $i = $p - floor($max/2);
             }
-            if( isset($i) ) {
+            if (isset($i)) {
                 $showMax = $p + floor($max/2);
                 $max % 2 == 0 && $showMax--;
             } else {
                 $showMax = $max;
                 $i       = 1;
             }
-            if( $i > $pages-($max-1) ) {
+            if ($i > $pages-($max-1)) {
                 $i = $pages-($max-1);
             }
-            if( $showMax > $pages ) {
+            if ($showMax > $pages) {
                 $showMax = $pages;
             }
-            for( ; $i<=$showMax; $i++ ) {
+            for (; $i<=$showMax; $i++) {
                 if( $i != $p ) {
                     $params = $parameter;
                     $params['p'] = $i;
@@ -241,7 +281,7 @@ class Model
                     $html .= '<span class="nowpage">'.$i.'</span>';
                 }
             }
-            if( $p == $pages ) {
+            if ($p == $pages) {
                 $html .= '<span class="disabled">下一页</span>';
             } else {
                 $params = $parameter;
@@ -251,7 +291,7 @@ class Model
             $params = $parameter;
             unset($params['p']);
             $url = Route::createUrl(ACTION_NAME, $params);
-            if( strpos($url, '?') === FALSE ) {
+            if (strpos($url, '?') === FALSE) {
                 $url .= '?';
             } else {
                 $url .= '&';
