@@ -1,5 +1,5 @@
 <?php
-namespace ezphp\driver;
+namespace ez\driver;
 
 /**
  * Redis session驱动

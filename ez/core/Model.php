@@ -1,5 +1,5 @@
 <?php
-namespace ezphp\core;
+namespace ez\core;
 
 /**
  * 数据模型类

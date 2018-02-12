@@ -1,5 +1,5 @@
 <?php
-namespace ezphp\core;
+namespace ez\core;
 
 /**
  * 表单生成类

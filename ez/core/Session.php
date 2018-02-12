@@ -1,5 +1,5 @@
 <?php
-namespace ezphp\core;
+namespace ez\core;
 
 /**
  * 会话操作类

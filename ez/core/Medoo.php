@@ -8,7 +8,7 @@
  * Released under the MIT license
  */
 
-namespace ezphp\core;
+namespace ez\core;
 
 use PDO;
 use Exception;

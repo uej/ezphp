@@ -1,5 +1,5 @@
 <?php
-namespace ezphp\driver;
+namespace ez\driver;
 
 /**
  * Session驱动抽象类，所有session驱动需继承此类

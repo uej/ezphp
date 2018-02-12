@@ -1,5 +1,5 @@
 <?php
-namespace ezphp\tool;
+namespace ez\tool;
 
 /**
  * Ueditor编辑器

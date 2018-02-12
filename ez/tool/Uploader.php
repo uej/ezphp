@@ -1,5 +1,5 @@
 <?php
-namespace ezphp\tool;
+namespace ez\tool;
 
 /**
  * Created by JetBrains PhpStorm.

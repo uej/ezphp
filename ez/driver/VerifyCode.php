@@ -1,5 +1,5 @@
 <?php
-namespace ezphp\driver;
+namespace ez\driver;
 use ez\core\Session;
 
 /**
