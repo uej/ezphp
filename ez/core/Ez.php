@@ -26,19 +26,13 @@ class Ez
             if (false !== strpos($classname, '\\')) {
 
                 /* 定位路径 */
-                $filename = __DIR__ . '/../' . str_replace('\\', '/', $classname . '.php');
+                $filename = SITE_PATH . '/../../' . str_replace('\\', '/', $classname . '.php');
 
                 /* 引入文件 */
                 if (is_file($filename)) {
                     include $filename;
                 }
-            } else {
-                $filename = __DIR__ . '/core/' . $classname . '.php';
-                if (is_file($filename)) {
-                    include $filename;
-                }
             }
-            
             return;
         }, TRUE, TRUE);
         
