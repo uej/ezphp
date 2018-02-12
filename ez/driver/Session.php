@@ -1,5 +1,5 @@
 <?php
-namespace ez\driver;
+namespace ezphp\driver;
 
 /**
  * Session驱动抽象类，所有session驱动需继承此类
@@ -15,7 +15,7 @@ abstract class Session
      */
     public function __construct()
     {
-		if (config('sessionAutoStart')) {
+		if (\ez\core\Ez::config('sessionAutoStart')) {
 			$this->init();
 			session_set_save_handler(
 				array($this, 'open'),

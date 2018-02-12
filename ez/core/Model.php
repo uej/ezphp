@@ -1,5 +1,5 @@
 <?php
-namespace ez\core;
+namespace ezphp\core;
 
 /**
  * 数据模型类
@@ -21,7 +21,7 @@ class Model
     /**
      * 错误信息
      */
-    public $error;
+    public $error = "操作失败";
     
     /**
      * 字段验证规则
@@ -44,10 +44,10 @@ class Model
     {
         $this->tableName = empty($table) ? $this->tableName : $table;
         if (empty($this->tableName)) {
-            throw new Exception("no tableName");
+            throw new \Exception("no tableName");
         }
         
-        $this->tablePrefix   = config('dbPrefix');
+        $this->tablePrefix   = Ez::config('dbPrefix');
         $this->trueTableName = $this->tablePrefix . $this->tableName;
     }
     
@@ -56,16 +56,49 @@ class Model
      * 
      * @access public
      */
-    public function makeMedoo()
+    public function makeMedoo($type = 1)
     {
-        static $medoo = '';
+        static $medoo   = [];
         
-        if (!empty($medoo)) {
-            return $medoo;
+        if ($type == 1) {
+            if (!empty($medoo[0])) {
+                return $medoo[0];
+            } else {
+                $master = array_rand(Ez::config('dbMaster'));
+                $option = [
+                    'database_type' => Ez::config('dbType'),
+                    'database_name' => $master['dbName'],
+                    'server'        => $master['dbHost'],
+                    'username'      => $master['dbUser'],
+                    'password'      => $master['dbPassword'],
+                    'charset'       => Ez::config('dbCharset'),
+                    'port'          => $master['dbPort'],
+                    'prefix'        => Ez::config('dbPrefix'),
+                ];
+                
+                $medoo[0]   = new Medoo($option);
+                return $medoo[0];
+            }
+        } else {
+            if (!empty($medoo[1])) {
+                return $medoo[1];
+            } else {
+                $slave  = array_rand(Ez::config('dbSlave'));
+                $option = [
+                    'database_type' => Ez::config('dbType'),
+                    'database_name' => $slave['dbName'],
+                    'server'        => $slave['dbHost'],
+                    'username'      => $slave['dbUser'],
+                    'password'      => $slave['dbPassword'],
+                    'charset'       => Ez::config('dbCharset'),
+                    'port'          => $slave['dbPort'],
+                    'prefix'        => Ez::config('dbPrefix'),
+                ];
+                
+                $medoo[1]   = new Medoo($option);
+                return $medoo[1];
+            }
         }
-        
-        $medoo = new Medoo();
-        return $medoo;
     }
     
     /**
@@ -77,57 +110,63 @@ class Model
     public function __call($name, $arguments)
     {
         if (in_array($name, [
-                'id', 
+                'id',
                 'action',
                 'quote',
                 'debug',
+            ])) {
+            $medoo  = $this->makeMedoo(1);
+            return call_user_func_array([$medoo, $name], $arguments);
+            
+        } else if (in_array($name, [
                 'error',
                 'log',
                 'last',
-                'info'
-                ])) {
-            $medoo = $this->makeMedoo();
-            $result = call_user_func_array([$medoo, $name], $arguments);
-            return $result;
+                'info',
+            ])) {
+            
+            if (Ez::config('dbDistributede') === 0) {
+                $medoo  = $this->makeMedoo(1);
+                return call_user_func_array([$medoo, $name], $arguments);
+            } else {
+                $medoo1 = $this->makeMedoo(1);
+                $medoo2 = $this->makeMedoo(2);
+                return [
+                    0   => call_user_func_array([$medoo1, $name], $arguments),
+                    1   => call_user_func_array([$medoo2, $name], $arguments),
+                ];
+            }
+            
         } else if (in_array($name, [
                 'delete',
+                'insert',
+                'replace',
+                'update',
+            ])) {
+            $medoo  = $this->makeMedoo(1);
+            array_unshift($arguments, $this->tableName);
+            return call_user_func_array([$medoo, $name], $arguments);
+            
+        } else if (in_array($name, [
                 'get', 
                 'max',
                 'min',
                 'avg',
                 'has',
                 'count',
-                'insert',
-                'replace',
                 'select',
                 'sum',
-                'update',
-                ])) {
-            $medoo = $this->makeMedoo();
+            ])) {
+            if (Ez::config('dbDistributede') === 0) {
+                $medoo = $this->makeMedoo(1);
+            } else {
+                $medoo = $this->makeMedoo(2);
+            }
             array_unshift($arguments, $this->tableName);
-            $result = call_user_func_array([$medoo, $name], $arguments);
-            return $result;
+            return call_user_func_array([$medoo, $name], $arguments);
+            
         } else {
-            throw new Exception('Method not exists');
-        }
-    }
-    
-    /**
-     * 访问pdo数据库连接
-     * 
-     * @param $name 访问的属性
-     * @access public
-     */
-    public function __get($name)
-    {
-        if ($name == 'pdo') {
-            return $this->makeMedoo()->connect();
-        } else if ($name == 'statement') {
-            return $this->makeMedoo()->statement;
-        } else if ($name == 'medoo') {
-            return $this->makeMedoo();
-        } else {
-            throw new \Exception('Attribute not exists');
+            throw new \Exception('Method not exists');
         }
     }
     
@@ -137,11 +176,12 @@ class Model
      * @param string $sql
      * @return boolean
      */
-    public function query($sql)
+    public function query($sql, $map = [])
     {
-        $this->makeMedoo()->query($sql);
-        if ($this->makeMedoo()->statement->errorCode() === '00000') {
-            return TRUE;
+        $medoo  = $this->makeMedoo(1);
+        $medoo->query($sql, $map);
+        if ($medoo->statement->errorCode() === '00000') {
+            return $medoo->statement;
         } else {
             return FALSE;
         }
@@ -150,26 +190,26 @@ class Model
     /**
      * 分页查找
      * 
-     * @param mixed $columns 查询字段
      * @param int $page 每页展示条数
      * @param int $max 最多展示页数
      * @param mixed $columns 查询字段
-     * @param mixed $join 链表查询设置
+     * @param array $where 查询条件
+     * @param mixed $join 连表查询设置
      * @return array 数据结果  [ 'data'=>数据数组, 'pages'=>总页数, 'count'=>数据总条数, 'html'=>分页html代码 ]
      */
-    public function findPage($page = 10, $where = null, $max = 9, $columns = '*', $join = null)
+    public function findPage($page = 10, $max = 9, $columns = '*', $where = null, $join = null)
     {
         /* 总数，页数计算 */
         $p      = !empty(filter_input(INPUT_GET, 'p')) ? intval(filter_input(INPUT_GET, 'p')) : 1;
         $cwhere = $where;
         unset($cwhere['ORDER']);
         unset($cwhere['GROUP']);
-        if(empty($join)) {
+        if (empty($join)) {
             $count = $this->count($cwhere);
         } else {
-            $count = $this->count($join, $columns, $cwhere);
+            $count = $this->count($join, '*', $cwhere);
         }
-        if($count == 0) {
+        if ($count == 0) {
             return [
                 'data'      => [],
                 'pages'     => 1,
@@ -178,15 +218,15 @@ class Model
             ];
         }
         $pages = ceil($count/$page);
-        if( $max > $pages ) {
+        if ( $max > $pages ) {
             $max = $pages;
         }
         $p > $pages && $p = $pages;
         
-        if( empty($p) || $p < 0 ) {
+        if ( empty($p) || $p < 0 ) {
             $p     = 1;
             $start = 0;
-        } else if( $p > $pages ) { 
+        } else if ( $p > $pages ) { 
             $start = ($pages-1) * $page;
         } else {
             $start = (intval($p) - 1) * $page;
@@ -194,12 +234,12 @@ class Model
         is_array($where) ? $where = array_merge( $where, [ 'LIMIT' =>  [$start, $page] ] ) : $where = [ 'LIMIT' =>  [$start, $page] ];
         
         /* 数据 */
-        if(empty($join)) {
+        if (empty($join)) {
             $data = $this->select($columns, $where);
         } else {
             $data = $this->select($join, $columns, $where);
         }
-        if(!$data) {
+        if (!$data) {
             return FALSE;
         }
         
@@ -207,32 +247,32 @@ class Model
         $parameter      = filter_input_array(INPUT_GET);
         
         /* 分页html生成 */
-        if($pages > 1) {
+        if ($pages > 1) {
             $html  = '<span class="total">共'.$count.'条，'.$pages.'页</span>';
-            if( empty($p) || $p == 1 ) {
+            if (empty($p) || $p == 1) {
                 $html .= '<span class="disabled">上一页</span>';
             } else {
                 $params = $parameter;
                 $params['p'] = $p-1;
                 $html .= '<a href="'.Route::createUrl(ACTION_NAME, $params).'">上一页</a>';
             }
-            if( $p > ceil($max/2) ) {
+            if ($p > ceil($max/2)) {
                 $i = $p - floor($max/2);
             }
-            if( isset($i) ) {
+            if (isset($i)) {
                 $showMax = $p + floor($max/2);
                 $max % 2 == 0 && $showMax--;
             } else {
                 $showMax = $max;
                 $i       = 1;
             }
-            if( $i > $pages-($max-1) ) {
+            if ($i > $pages-($max-1)) {
                 $i = $pages-($max-1);
             }
-            if( $showMax > $pages ) {
+            if ($showMax > $pages) {
                 $showMax = $pages;
             }
-            for( ; $i<=$showMax; $i++ ) {
+            for (; $i<=$showMax; $i++) {
                 if( $i != $p ) {
                     $params = $parameter;
                     $params['p'] = $i;
@@ -241,7 +281,7 @@ class Model
                     $html .= '<span class="nowpage">'.$i.'</span>';
                 }
             }
-            if( $p == $pages ) {
+            if ($p == $pages) {
                 $html .= '<span class="disabled">下一页</span>';
             } else {
                 $params = $parameter;
@@ -251,29 +291,29 @@ class Model
             $params = $parameter;
             unset($params['p']);
             $url = Route::createUrl(ACTION_NAME, $params);
-            if( strpos($url, '?') === FALSE ) {
+            if (strpos($url, '?') === FALSE) {
                 $url .= '?';
             } else {
                 $url .= '&';
             }
             
             $html .= '<span class="turnto">转到</span>
-            <input id="jump_page" class="textInput" value="" style="width:30px;" maxlength="10" type="text">
-            <span class="turnto">页</span>
-            <a href="javascript:void(0)" onclick="jumppage()">GO</a>
-            <script>
-                function jumppage() {
-                    var hrefPageNo = document.getElementById("jump_page");
-                    var hrefPageNoValue = hrefPageNo.value;
-                    var pattern = /^\d+$/;
-                    if(pattern.test(hrefPageNoValue) && hrefPageNoValue>0 && hrefPageNoValue<='.$pages.') {
-                        window.location.href="'.$url.'p="+hrefPageNoValue;
-                    } else {
-                        alert("页数输入不合法");
-                        hrefPageNo.focus();
-                    }
-                }
-            </script>';
+<input id="jump_page" class="textInput" value="" style="width:30px;" maxlength="10" type="text">
+<span class="turnto">页</span>
+<a href="javascript:void(0)" onclick="jumppage()">GO</a>
+<script>
+    function jumppage() {
+        var hrefPageNo = document.getElementById("jump_page");
+        var hrefPageNoValue = hrefPageNo.value;
+        var pattern = /^\d+$/;
+        if(pattern.test(hrefPageNoValue) && hrefPageNoValue>0 && hrefPageNoValue<='.$pages.') {
+            window.location.href="'.$url.'p="+hrefPageNoValue;
+        } else {
+            alert("页数输入不合法");
+            hrefPageNo.focus();
+        }
+    }
+</script>';
         }
         
         return [
@@ -306,13 +346,13 @@ class Model
         }
         foreach ($data as $key => $val) {
             if (in_array($key, $keys)) {
-                $arr[$key] = trim($val);
+                $arr[$key] = htmlspecialchars(trim($val));      // 全局转换html元素
             }
         }
         
         $res = $this->checkColumns($arr);
         if ($res) {
-            return $arr;
+            return $res;
         } else {
             return FALSE;
         }
@@ -332,32 +372,71 @@ class Model
         }
         
         if (empty($this->fieldCheckRule)) {
-            return TRUE;
+            return $arr;
         }
         
         if (!is_array($this->fieldCheckRule)) {
             $this->error = "Model::fieldCheckRule must be array";
             return FALSE;
         }
+        
+        /**
+         * $this->fieldCheckRule对应字段的验证规则
+         *      type        => 三种验证类型：function（函数返回等价于true通过验证）、pattern（正则匹配）、handle（操作改变数据值）
+         *      method      => type in [function, handle]时填写
+         *      pattern     => type in [pattern]时填写
+         *      match       => type in [pattern]时填写，匹配成功通过验证为true，(默认)匹配失败通过验证为false 
+         *      must        => 等价于true时必须验证，否则在值不为空时才验证
+         *      errorMsg    => 不通过验证的错误消息
+         */
         foreach ($arr as $key => $val) {
             if (isset($this->fieldCheckRule[$key])) {
                 switch ($this->fieldCheckRule[$key]['type']) {
                     case 'function':
-                        if (!call_user_func($this->fieldCheckRule[$key]['method'], $val)) {
-                            $this->error = $this->fieldCheckRule[$key]['errorMsg'];
-                            return FALSE;
+                        if (!empty($val) || $this->fieldCheckRule[$key]['must']) {
+                            if (empty($this->fieldCheckRule[$key]['method'])) {
+                                if (empty($val)) {
+                                    $this->error = $this->fieldCheckRule[$key]['errorMsg'];
+                                    return FALSE;
+                                }
+                            } else {
+                                if (!call_user_func($this->fieldCheckRule[$key]['method'], $val)) {
+                                    $this->error = $this->fieldCheckRule[$key]['errorMsg'];
+                                    return FALSE;
+                                }
+                            }
                         }
                         break;
                     case 'pattern':
-                        if (!preg_match($this->fieldCheckRule[$key]['pattern'], $val)) {
-                            $this->error = $this->fieldCheckRule[$key]['errorMsg'];
-                            return FALSE;
+                        if (!empty($val) || $this->fieldCheckRule[$key]['must']) {
+                            if (empty($this->fieldCheckRule[$key]['match'])) {
+                                if (preg_match($this->fieldCheckRule[$key]['pattern'], $val)) {
+                                    $this->error = $this->fieldCheckRule[$key]['errorMsg'];
+                                    return FALSE;
+                                }
+                            } else {
+                                if (!preg_match($this->fieldCheckRule[$key]['pattern'], $val)) {
+                                    $this->error = $this->fieldCheckRule[$key]['errorMsg'];
+                                    return FALSE;
+                                }
+                            }
                         }
+                        break;
+                    case 'handle':
+                        if (!empty($val) || $this->fieldCheckRule[$key]['must']) {
+                            $val = call_user_func($this->fieldCheckRule[$key]['method'], $val);
+                            if (!$val) {
+                                $this->error = $this->fieldCheckRule[$key]['errorMsg'];
+                                return FALSE;
+                            }
+                            $arr[$key] = $val;
+                        }
+                        break;
                 }
             }
         }
         
-        return TRUE;
+        return $arr;
     }
     
 }

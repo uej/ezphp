@@ -1,5 +1,5 @@
 <?php
-namespace ez\driver;
+namespace ezphp\driver;
 
 /**
  * 下载类，支持断点续传
@@ -61,7 +61,7 @@ class Download
                 ob_flush();
                 
                 /* 用于测试,减慢下载速度 */
-                if(config('debug')) {
+                if(\ez\core\Ez::config('debug')) {
                     sleep(1);
                 }
             }

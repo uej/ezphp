@@ -1,5 +1,5 @@
 <?php
-namespace ez\tool;
+namespace ezphp\tool;
 
 /**
  * Ueditor编辑器
@@ -20,24 +20,16 @@ class Ueditor
      * @param array $path 路径设置
      * @access public
      */
-    public function __construct($path = NULL) 
+    public function __construct($path = NULL)
     {
         header("Content-Type: text/html; charset=utf-8");
 
-        $CONFIG = json_decode(preg_replace("/\/\*[\s\S]+?\*\//", "", file_get_contents("../config/config.json")), true);
-        isset($path['imagePathFormat']) && $CONFIG['imagePathFormat'] = "data/uploads/ueditor/images/{yyyy}{mm}{dd}/{time}{rand:6}";
-        isset($path['scrawlPathFormat']) && $CONFIG['scrawlPathFormat'] = "data/uploads/ueditor/images/{yyyy}{mm}{dd}/{time}{rand:6}";
-        isset($path['snapscreenPathFormat']) && $CONFIG['snapscreenPathFormat'] = "data/uploads/ueditor/images/{yyyy}{mm}{dd}/{time}{rand:6}";
-        isset($path['catcherPathFormat']) && $CONFIG['catcherPathFormat'] = "data/uploads/ueditor/images/{yyyy}{mm}{dd}/{time}{rand:6}";
-        isset($path['videoPathFormat']) && $CONFIG['videoPathFormat'] = "data/uploads/ueditor/video/{yyyy}{mm}{dd}/{time}{rand:6}";
-        isset($path['filePathFormat']) && $CONFIG['filePathFormat']  = "data/uploads/ueditor/file/{yyyy}{mm}{dd}/{time}{rand:6}";
-        isset($path['imageManagerListPath']) && $CONFIG['imageManagerListPath'] = "data/uploads/ueditor/images/";
-        isset($path['fileManagerListPath']) && $CONFIG['imageManagerListPath'] = "data/uploads/ueditor/file/";
+        $this->CONFIG = json_decode(preg_replace("/\/\*[\s\S]+?\*\//", "", file_get_contents("../config/ueditor.json")), true);
         $action = $_GET['action'];
 
         switch ($action) {
             case 'config':
-                $result =  json_encode($CONFIG);
+                $result =  json_encode($this->CONFIG);
                 break;
 
             /* 上传图片 */
@@ -93,12 +85,12 @@ class Ueditor
     {
         /* 上传配置 */
         $config = array(
-            "pathFormat" => $CONFIG['catcherPathFormat'],
-            "maxSize" => $CONFIG['catcherMaxSize'],
-            "allowFiles" => $CONFIG['catcherAllowFiles'],
+            "pathFormat" => $this->CONFIG['catcherPathFormat'],
+            "maxSize" => $this->CONFIG['catcherMaxSize'],
+            "allowFiles" => $this->CONFIG['catcherAllowFiles'],
             "oriName" => "remote.png"
         );
-        $fieldName = $CONFIG['catcherFieldName'];
+        $fieldName = $this->CONFIG['catcherFieldName'];
 
         /* 抓取远程图片 */
         $list = array();
@@ -139,41 +131,41 @@ class Ueditor
         switch (htmlspecialchars($_GET['action'])) {
             case 'uploadimage':
                 $config = array(
-                    "pathFormat" => $CONFIG['imagePathFormat'],
-                    "maxSize" => $CONFIG['imageMaxSize'],
-                    "allowFiles" => $CONFIG['imageAllowFiles']
+                    "pathFormat" => $this->CONFIG['imagePathFormat'],
+                    "maxSize" => $this->CONFIG['imageMaxSize'],
+                    "allowFiles" => $this->CONFIG['imageAllowFiles']
                 );
-                $fieldName = $CONFIG['imageFieldName'];
+                $fieldName = $this->CONFIG['imageFieldName'];
                 break;
             
             case 'uploadscrawl':
                 $config = array(
-                    "pathFormat" => $CONFIG['scrawlPathFormat'],
-                    "maxSize" => $CONFIG['scrawlMaxSize'],
-                    "allowFiles" => $CONFIG['scrawlAllowFiles'],
+                    "pathFormat" => $this->CONFIG['scrawlPathFormat'],
+                    "maxSize" => $this->CONFIG['scrawlMaxSize'],
+                    "allowFiles" => $this->CONFIG['scrawlAllowFiles'],
                     "oriName" => "scrawl.png"
                 );
-                $fieldName = $CONFIG['scrawlFieldName'];
+                $fieldName = $this->CONFIG['scrawlFieldName'];
                 $base64 = "base64";
                 break;
             
             case 'uploadvideo':
                 $config = array(
-                    "pathFormat" => $CONFIG['videoPathFormat'],
-                    "maxSize" => $CONFIG['videoMaxSize'],
-                    "allowFiles" => $CONFIG['videoAllowFiles']
+                    "pathFormat" => $this->CONFIG['videoPathFormat'],
+                    "maxSize" => $this->CONFIG['videoMaxSize'],
+                    "allowFiles" => $this->CONFIG['videoAllowFiles']
                 );
-                $fieldName = $CONFIG['videoFieldName'];
+                $fieldName = $this->CONFIG['videoFieldName'];
                 break;
             
             case 'uploadfile':
             default:
                 $config = array(
-                    "pathFormat" => $CONFIG['filePathFormat'],
-                    "maxSize" => $CONFIG['fileMaxSize'],
-                    "allowFiles" => $CONFIG['fileAllowFiles']
+                    "pathFormat" => $this->CONFIG['filePathFormat'],
+                    "maxSize" => $this->CONFIG['fileMaxSize'],
+                    "allowFiles" => $this->CONFIG['fileAllowFiles']
                 );
-                $fieldName = $CONFIG['fileFieldName'];
+                $fieldName = $this->CONFIG['fileFieldName'];
                 break;
         }
 
@@ -208,17 +200,17 @@ class Ueditor
             
             /* 列出文件 */
             case 'listfile':
-                $allowFiles = $CONFIG['fileManagerAllowFiles'];
-                $listSize = $CONFIG['fileManagerListSize'];
-                $path = $CONFIG['fileManagerListPath'];
+                $allowFiles = $this->CONFIG['fileManagerAllowFiles'];
+                $listSize = $this->CONFIG['fileManagerListSize'];
+                $path = $this->CONFIG['fileManagerListPath'];
                 break;
             
             /* 列出图片 */
             case 'listimage':
             default:
-                $allowFiles = $CONFIG['imageManagerAllowFiles'];
-                $listSize = $CONFIG['imageManagerListSize'];
-                $path = $CONFIG['imageManagerListPath'];
+                $allowFiles = $this->CONFIG['imageManagerAllowFiles'];
+                $listSize = $this->CONFIG['imageManagerListSize'];
+                $path = $this->CONFIG['imageManagerListPath'];
         }
         $allowFiles = substr(str_replace(".", "|", join("", $allowFiles)), 1);
 

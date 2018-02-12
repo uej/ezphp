@@ -1,5 +1,5 @@
 <?php
-namespace ez\core;
+namespace ezphp\core;
 
 /**
  * 网络相关工具类
@@ -17,34 +17,34 @@ class Network
      * 
      * @access public
      */
-    public static function get_ip($type = 0,$adv=false) {
-        $type      = $type ? 1 : 0;
-        static $ip = NULL;
-        if (null !== $ip) {
-            return $ip[$type];
-        }
-
-        if ($adv) {
-            if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-                $arr = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
-                $pos = array_search('unknown', $arr);
-                if (false !== $pos) {
-                    unset($arr[$pos]);
-                }
-                $ip = trim(current($arr));
-            } elseif (isset($_SERVER['HTTP_CLIENT_IP'])) {
-                $ip = $_SERVER['HTTP_CLIENT_IP'];
-            } elseif (isset($_SERVER['REMOTE_ADDR'])) {
-                $ip = $_SERVER['REMOTE_ADDR'];
-            }
-        } elseif (isset($_SERVER['REMOTE_ADDR'])) {
-            $ip = $_SERVER['REMOTE_ADDR'];
+    public static function get_ip() {
+        static $realip = NULL;
+        if (NULL !== $realip) {
+            return $realip;
         }
         
-        /* IP地址合法验证 */ 
-        $long = sprintf("%u", ip2long($ip));
-        $ip   = $long ? [$ip, $long] : ['0.0.0.0', 0];
-        return $ip[$type];
+        if ( isset($_SERVER) ) {
+            if (isset($_SERVER["HTTP_X_FORWARDED_FOR"])){
+                $realip = $_SERVER["HTTP_X_FORWARDED_FOR"];
+            } else if (isset($_SERVER["HTTP_CLIENT_IP"])) {
+                $realip = $_SERVER["HTTP_CLIENT_IP"];
+            } else {
+                $realip = $_SERVER["REMOTE_ADDR"];
+            }
+        
+        } else {
+            if (getenv("HTTP_X_FORWARDED_FOR")){
+                $realip = getenv("HTTP_X_FORWARDED_FOR");
+            } else if (getenv("HTTP_CLIENT_IP")) {
+                $realip = getenv("HTTP_CLIENT_IP");
+            } else {
+                $realip = getenv("REMOTE_ADDR");
+            }
+        }
+        $onlineip = array();
+        preg_match("/[\d\.]{7,15}/", $realip, $onlineip);
+        $realip = !empty($onlineip[0]) ? $onlineip[0] : '0.0.0.0';
+        return $realip;
     }
     
 }

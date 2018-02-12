@@ -1,5 +1,5 @@
 <?php
-namespace ez\core;
+namespace ezphp\core;
 
 /**
  * 框架默认路由
@@ -39,18 +39,17 @@ class Route
     public function parsePath()
     {
         /* url重写 */
-        if (config('urlRewrite')) {
-            $script_name = isset($_SERVER['ORIG_SCRIPT_NAME']) ? $_SERVER['ORIG_SCRIPT_NAME'] : $_SERVER['SCRIPT_NAME'];
-            if (isset($_SERVER['REDIRECT_PATH_INFO']) && !empty($_SERVER['REDIRECT_PATH_INFO'])) {
-                $pathinfo = trim(str_replace(Config('urlSuffix'), '', $_SERVER['REDIRECT_PATH_INFO']), '/');
+        if (Ez::config('urlRewrite')) {
+            if (isset($_SERVER['REDIRECT_PATH_INFO']) && !empty(filter_input(INPUT_SERVER, 'REDIRECT_PATH_INFO'))) {
+                $pathinfo = trim(str_replace(Ez::config('urlSuffix'), '', filter_input(INPUT_SERVER, 'REDIRECT_PATH_INFO')), '/');
                 $param = explode('/', $pathinfo);
-            } elseif (isset($_SERVER['PATH_INFO']) && !empty($_SERVER['PATH_INFO'])) {
-                $param = explode('/', trim(str_replace(Config('urlSuffix'), '', $_SERVER['PATH_INFO']), '/'));
+            } elseif (isset($_SERVER['PATH_INFO']) && !empty(filter_input(INPUT_SERVER, 'PATH_INFO'))) {
+                $param = explode('/', trim(str_replace(Ez::config('urlSuffix'), '', filter_input(INPUT_SERVER, 'PATH_INFO')), '/'));
             }
             
         } else {
-            if(isset($_SERVER['PATH_INFO']) && !empty($_SERVER['PATH_INFO'])) {
-                $param = explode('/', trim(str_replace(Config('urlSuffix'), '', $_SERVER['PATH_INFO']), '/'));
+            if(isset($_SERVER['PATH_INFO']) && !empty(filter_input(INPUT_SERVER, 'PATH_INFO'))) {
+                $param = explode('/', trim(str_replace(Ez::config('urlSuffix'), '', filter_input(INPUT_SERVER, 'PATH_INFO')), '/'));
             } else {
                 $param = [];
             }
@@ -60,14 +59,14 @@ class Route
         if(isset($param[0]) && !empty($param[0])) {
             $this->controller = strtolower($param[0]);
         } else {
-            $this->controller = config('defaultController');
+            $this->controller = Ez::config('defaultController');
         }
         
         /* 方法 */
         if(isset($param[1]) && !empty($param[0])) {
             $this->action = strtolower($param[1]);
         } else {
-            $this->action = config('defaultAction');
+            $this->action = Ez::config('defaultAction');
         }
     }
     
@@ -88,7 +87,7 @@ class Route
         }
         
         /* 域名显示判断 */
-        if (!config('urlRewrite')) {
+        if (!Ez::config('urlRewrite')) {
             $realurl = $domain ? HTTPHOST . '/index.php' : '/index.php';
         } else {
             $realurl = $domain ? HTTPHOST : '';
@@ -99,9 +98,9 @@ class Route
         if (is_array($params) && !empty($params)) {
             foreach ($params as $key => $value) {
                 if (strpos($get, '?') !== FALSE) {
-                    $get .= "&$key=$value";
+                    $get .= "&$key=" . urlencode($value);
                 } else {
-                    $get .= "?$key=$value";
+                    $get .= "?$key=" . urlencode($value);
                 }
             }
         }
@@ -109,9 +108,9 @@ class Route
         $path  = explode('/', $url);
         $total = count($path);
         if ($total == 1) {
-            $realurl .= '/' . CONTROLLER_NAME . '/' . $path[0] . config('urlSuffix');
+            $realurl .= '/' . CONTROLLER_NAME . '/' . $path[0] . Ez::config('urlSuffix');
         } else if ($total == 2) {
-            $realurl .= '/' . $path[0] . '/' . $path[1] . config('urlSuffix');
+            $realurl .= '/' . $path[0] . '/' . $path[1] . Ez::config('urlSuffix');
         }
         
         $realurl .= $get;

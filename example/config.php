@@ -6,38 +6,40 @@
  */
 return [
     /* 是否开启调试 */
-    'debug'             => TRUE,
+    'debug'             => 1,
     
     /* 数据库配置 */
     'dbType'            => 'mysql',
-    'dbDistributede'    => FALSE,                       // 是否开启分布式数据库
+    'dbDistributede'    => 0,                           // 0：单数据库、互为主从  1：主从读写分离
     'dbPrefix'          => 'cmf_',                      // 数据库表前缀
     'dbCharset'         => 'utf8',                      // 数据库链接字符集
     
     /* 主数据库 */
     'dbMaster'          => [
-        'dbHost'            => '127.0.0.1',
-        'dbName'            => 'testphp',
-        'dbUser'            => 'root',
-        'dbPassword'        => 'root',
-        'dbPort'            => 3306,
+        [
+            'dbHost'            => '127.0.0.1',
+            'dbName'            => 'testphp',
+            'dbUser'            => 'root',
+            'dbPassword'        => 'root',
+            'dbPort'            => 3306,
+        ],
     ],
     
     /* 从数据库 */
     'dbSlave'           => [
         [
-            'dbHost'            => '',
-            'dbName'            => '',
-            'dbUser'            => '',
-            'dbPassword'        => '',
-            'dbPort'            => 3306,
+            'dbHost'        => '',
+            'dbName'        => '',
+            'dbUser'        => '',
+            'dbPassword'    => '',
+            'dbPort'        => 3306,
         ],
         [
-            'dbHost'            => '',
-            'dbName'            => '',
-            'dbUser'            => '',
-            'dbPassword'        => '',
-            'dbPort'            => 3306,
+            'dbHost'        => '',
+            'dbName'        => '',
+            'dbUser'        => '',
+            'dbPassword'    => '',
+            'dbPort'        => 3306,
         ],
     ],
     

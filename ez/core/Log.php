@@ -1,5 +1,5 @@
 <?php
-namespace ez\core;
+namespace ezphp\core;
 
 /**
  * 日志类
@@ -41,17 +41,13 @@ class Log
     /**
      * 写入操作
      * 
+     * @param string $msg 错误异常信息
      * @access private
      */
     private static function write($msg)
     {
         self::makeDir();
-//        error_log(date('Y-m-d H:i:s ') . $msg . '\r\n',
-//                3, 
-//                SITE_PATH . '/../runtime/logs/' . date('Ym') . '/' . date('Ymd') . '.log');
-        file_put_contents(SITE_PATH . '/../runtime/logs/' . date('Ym') . '/' . date('Ymd') . '.log', 
-                date('Y-m-d H:i:s ') . $msg . "\n",
-                FILE_APPEND);
+        error_log(date('Y-m-d H:i:s ') . $msg . PHP_EOL, 3, SITE_PATH . '/../runtime/logs/' . date('Ym') . '/' . date('Ymd') . '.log');
     }
 }
 

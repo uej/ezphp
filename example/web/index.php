@@ -16,7 +16,7 @@ $_config = include(__DIR__ . '/../config.php');
 
 /* 引入函数 */
 require(__DIR__ . '/../../ez/autoload.php');
-include(__DIR__ . '/../function.php');
+require(__DIR__ . '/../function.php');
 
 /* 应用开始 */
 \ez\core\Ez::start();
