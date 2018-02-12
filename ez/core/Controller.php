@@ -31,7 +31,7 @@ class Controller
      */
     public function __construct()
     {
-        $this->suffix = config('templateSuffix');
+        $this->suffix = Ez::config('templateSuffix');
         $this->templateDir = '../view/' . strtolower(CONTROLLER_NAME) . '/';
     }
     

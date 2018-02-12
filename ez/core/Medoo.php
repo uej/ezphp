@@ -43,8 +43,8 @@ class Medoo
      * @access public
      */
     public function __construct() {
-        $this->prefix = config('dbPrefix');
-        $this->database_type = config('dbType');
+        $this->prefix = Ez::config('dbPrefix');
+        $this->database_type = Ez::config('dbType');
     }
     
     /**
@@ -58,20 +58,20 @@ class Medoo
         static $_link = [];
         
         /* $_link[0]主数据库连接，$_link[1]从数据库连接 */
-        if (!config('dbDistributede') || $type == 1 || $this->transaction) {
+        if (!Ez::config('dbDistributede') || $type == 1 || $this->transaction) {
             if(isset($_link[0])) {
                 return $_link[0];
             }
             
-            $options = config('dbMaster');
+            $options = Ez::config('dbMaster');
         } else {
             if(isset($_link[1])) {
                 return $_link[1];
             }
             
-            $options = array_rand(config('dbMaster'));
+            $options = array_rand(Ez::config('dbMaster'));
         }
-        $options['dbCharset'] = config('dbCharset');
+        $options['dbCharset'] = Ez::config('dbCharset');
         
 		try {
 			if (isset($options[ 'option' ])) {
@@ -186,7 +186,7 @@ class Medoo
 						break;
 
 					case 'sqlite':
-                        if (!config('dbDistributede') || $type == 1  || $this->transaction) {
+                        if (!Ez::config('dbDistributede') || $type == 1  || $this->transaction) {
                             $_link[0] = new PDO('sqlite:' . $options[ 'dbFile' ], null, null, $this->option);
                             return $_link[0];
                         } else {
@@ -216,13 +216,13 @@ class Medoo
 				$commands[] = "SET NAMES '" . $options[ 'dbCharset' ] . "'";
 			}
 
-            if (!config('dbDistributede') || $type == 1 || $this->transaction) {
+            if (!Ez::config('dbDistributede') || $type == 1 || $this->transaction) {
                 $_link[0] = new PDO($dsn, $options[ 'dbUser' ], $options[ 'dbPassword' ], $this->option);
             } else {
                 $_link[1] = new PDO($dsn, $options[ 'dbUser' ], $options[ 'dbPassword' ], $this->option);
             }
             
-            if (!config('dbDistributede') || $type == 1 || $this->transaction) {
+            if (!Ez::config('dbDistributede') || $type == 1 || $this->transaction) {
                 foreach ($commands as $value) {
                     $_link[0]->exec($value);
                 }

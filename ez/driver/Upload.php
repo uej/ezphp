@@ -61,10 +61,10 @@ class Upload {
             exit;
         }
         
-        $this->exts     = isset($conf['uploadExts']) ? $conf['uploadExts'] : config('uploadExts');
-        $this->types    = isset($conf['uploadTypes']) ? $conf['uploadTypes'] : config('uploadTypes');
-        $this->size     = isset($conf['uploadSize']) ? $conf['uploadSize'] : config('uploadSize');
-        $this->path     = isset($conf['uploadPath']) ? $conf['uploadPath'] : config('uploadPath');
+        $this->exts     = isset($conf['uploadExts']) ? $conf['uploadExts'] : \ez\core\Ez::config('uploadExts');
+        $this->types    = isset($conf['uploadTypes']) ? $conf['uploadTypes'] : \ez\core\Ez::config('uploadTypes');
+        $this->size     = isset($conf['uploadSize']) ? $conf['uploadSize'] : \ez\core\Ez::config('uploadSize');
+        $this->path     = isset($conf['uploadPath']) ? $conf['uploadPath'] : \ez\core\Ez::config('uploadPath');
     }
     
     /**

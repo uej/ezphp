@@ -26,14 +26,14 @@ class SessionRedis
             $this->redis = $redis;
         } else {
             $redis = new \Redis();
-            $redis->connect(config('redisHost'), config('redisPort'));
-            if (config('redisPassword')) {
-                $redis->auth(config('redisPassword'));
+            $redis->connect(\ez\core\Ez::config('redisHost'), \ez\core\Ez::config('redisPort'));
+            if (\ez\core\Ez::config('redisPassword')) {
+                $redis->auth(\ez\core\Ez::config('redisPassword'));
             }
             $this->redis = $redis;
         }
         
-        $this->redis->select(config('redisSessiondb'));
+        $this->redis->select(\ez\core\Ez::config('redisSessiondb'));
     }
     
     /**
@@ -63,7 +63,7 @@ class SessionRedis
      */
     public function read($sessionId)
     {
-        return $this->redis->get(config('redisSessionPrefix') . $sessionId);
+        return $this->redis->get(\ez\core\Ez::config('redisSessionPrefix') . $sessionId);
     }
     
     /**
@@ -73,11 +73,11 @@ class SessionRedis
      */
     public function write($sessionId, $data)
     {
-        $expire = config('sessionExpire');
+        $expire = \ez\core\Ez::config('sessionExpire');
         if ($expire > 0) {
-            return $this->redis->setex(config('redisSessionPrefix') . $sessionId, config('sessionExpire'), $data);
+            return $this->redis->setex(\ez\core\Ez::config('redisSessionPrefix') . $sessionId, \ez\core\Ez::config('sessionExpire'), $data);
         } else {
-            return $this->redis->set(config('redisSessionPrefix') . $sessionId, $data);
+            return $this->redis->set(\ez\core\Ez::config('redisSessionPrefix') . $sessionId, $data);
         }
     }
     
@@ -103,7 +103,7 @@ class SessionRedis
      */
     public function destroy($sessionId) 
     {
-        return $this->redis->delete(config('redisSessionPrefix') . $sessionId);
+        return $this->redis->delete(\ez\core\Ez::config('redisSessionPrefix') . $sessionId);
     }
     
     /**

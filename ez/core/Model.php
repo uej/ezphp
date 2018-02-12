@@ -47,7 +47,7 @@ class Model
             throw new \Exception("no tableName");
         }
         
-        $this->tablePrefix   = config('dbPrefix');
+        $this->tablePrefix   = Ez::config('dbPrefix');
         $this->trueTableName = $this->tablePrefix . $this->tableName;
     }
     

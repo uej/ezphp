@@ -24,7 +24,7 @@ class Form
             $str .= $k . filter_input($method, $k);
         }
         
-        if (sha1(config('inputSign').$str) == $signKey) {
+        if (sha1(Ez::config('inputSign').$str) == $signKey) {
             return TRUE;
         } else {
             return FALSE;
@@ -43,6 +43,6 @@ class Form
         foreach ($fields as $k => $v) {
             $str .= $k . $v;
         }
-        return sha1(config('inputSign') . $str);
+        return sha1(Ez::config('inputSign') . $str);
     }
 }

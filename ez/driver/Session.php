@@ -15,7 +15,7 @@ abstract class Session
      */
     public function __construct()
     {
-		if (config('sessionAutoStart')) {
+		if (\ez\core\Ez::config('sessionAutoStart')) {
 			$this->init();
 			session_set_save_handler(
 				array($this, 'open'),

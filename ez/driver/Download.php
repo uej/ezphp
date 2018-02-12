@@ -61,7 +61,7 @@ class Download
                 ob_flush();
                 
                 /* 用于测试,减慢下载速度 */
-                if(config('debug')) {
+                if(\ez\core\Ez::config('debug')) {
                     sleep(1);
                 }
             }

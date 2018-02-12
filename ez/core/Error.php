@@ -26,12 +26,13 @@ class Error
      */
     public static function showErrorPage()
     {
-        if (!config('errorPage') && is_file(__DIR__ . '/../template/error.php')) {
+        $errorPage  = Ez::config('errorPage');
+        if (!$errorPage && is_file(__DIR__ . '/../template/error.php')) {
             include __DIR__ . '/../template/error.php';
             die;
         }
-        if (is_file(config('errorPage'))) {
-            include config('errorPage');
+        if (is_file($errorPage)) {
+            include $errorPage;
             die;
         }
         die('<h1>施工现场，<a href="'.Route::createUrl().'">返回首页</a></h1>');
@@ -64,7 +65,7 @@ class Error
             case E_USER_DEPRECATED:
                 break;
             default:
-                if (config('debug')) {
+                if (Ez::config('debug')) {
                     self::showError($msg);
                 } else {
                     self::showErrorPage();
@@ -84,7 +85,7 @@ class Error
         $msg = $ex->__toString();
         Log::addLog($msg);
         
-        if (config('debug')) {
+        if (Ez::config('debug')) {
             self::showError($msg);
         } else {
             self::showErrorPage();
