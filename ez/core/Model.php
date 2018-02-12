@@ -64,7 +64,8 @@ class Model
             if (!empty($medoo[0])) {
                 return $medoo[0];
             } else {
-                $master = array_rand(Ez::config('dbMaster'));
+                $master = Ez::config('dbMaster');
+                $master = $master[array_rand($master)];
                 $option = [
                     'database_type' => Ez::config('dbType'),
                     'database_name' => $master['dbName'],
@@ -83,7 +84,8 @@ class Model
             if (!empty($medoo[1])) {
                 return $medoo[1];
             } else {
-                $slave  = array_rand(Ez::config('dbSlave'));
+                $slave  = Ez::config('dbSlave');
+                $slave  = $slave[array_rand($slave)];
                 $option = [
                     'database_type' => Ez::config('dbType'),
                     'database_name' => $slave['dbName'],
