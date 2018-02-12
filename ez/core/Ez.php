@@ -21,6 +21,27 @@ class Ez
             die('PHP版过低! 运行系统必须大于5.4。谢谢合作!');
         }
         
+        /* 自动加载注册 */
+        spl_autoload_register(function($classname) {
+            if (false !== strpos($classname, '\\')) {
+
+                /* 定位路径 */
+                $filename = __DIR__ . '/../' . str_replace('\\', '/', $classname . '.php');
+
+                /* 引入文件 */
+                if (is_file($filename)) {
+                    include $filename;
+                }
+            } else {
+                $filename = __DIR__ . '/core/' . $classname . '.php';
+                if (is_file($filename)) {
+                    include $filename;
+                }
+            }
+            
+            return;
+        }, TRUE, TRUE);
+        
         set_error_handler(["\\ez\\core\\Error", "errorHandler"]);
         set_exception_handler(["\\ez\\core\\Error", "exceptionHandler"]);
         
