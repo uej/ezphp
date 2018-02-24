@@ -9,11 +9,6 @@ namespace ez\core;
 class Model
 {
     /**
-     * 表名，不带前缀
-     */
-    public $tableName;
-    
-    /**
      * 真实表名，带前缀
      */
     public $trueTableName;
@@ -42,13 +37,13 @@ class Model
      */
     public function __construct($table = '')
     {
-        $this->tableName = empty($table) ? $this->tableName : $table;
-        if (empty($this->tableName)) {
+        $this->tablename = empty($table) ? static::$tableName : $table;
+        if (empty($this->tablename)) {
             throw new \Exception("no tableName");
         }
         
-        $this->tablePrefix   = Ez::config('dbPrefix');
-        $this->trueTableName = $this->tablePrefix . $this->tableName;
+        $this->tablePrefix      = Ez::config('dbPrefix');
+        $this->trueTableName    = $this->tablePrefix . $this->tableName;
     }
     
     /**
@@ -56,7 +51,7 @@ class Model
      * 
      * @access public
      */
-    public function makeMedoo($type = 1)
+    public static function makeMedoo($type = 1)
     {
         static $medoo   = [];
         
@@ -104,7 +99,7 @@ class Model
     }
     
     /**
-     * 魔术方法调用数据库
+     * 魔术方法调用medoo
      * 
      * @param string $name 方法名
      * @param array $$arguments 参数数组
@@ -117,7 +112,7 @@ class Model
                 'quote',
                 'debug',
             ])) {
-            $medoo  = $this->makeMedoo(1);
+            $medoo  = self::makeMedoo(1);
             return call_user_func_array([$medoo, $name], $arguments);
             
         } else if (in_array($name, [
@@ -128,11 +123,11 @@ class Model
             ])) {
             
             if (Ez::config('dbDistributede') === 0) {
-                $medoo  = $this->makeMedoo(1);
+                $medoo  = self::makeMedoo(1);
                 return call_user_func_array([$medoo, $name], $arguments);
             } else {
-                $medoo1 = $this->makeMedoo(1);
-                $medoo2 = $this->makeMedoo(2);
+                $medoo1 = self::makeMedoo(1);
+                $medoo2 = self::makeMedoo(2);
                 return [
                     0   => call_user_func_array([$medoo1, $name], $arguments),
                     1   => call_user_func_array([$medoo2, $name], $arguments),
@@ -145,8 +140,8 @@ class Model
                 'replace',
                 'update',
             ])) {
-            $medoo  = $this->makeMedoo(1);
-            array_unshift($arguments, $this->tableName);
+            $medoo  = self::makeMedoo(1);
+            array_unshift($arguments, $this->tablename);
             return call_user_func_array([$medoo, $name], $arguments);
             
         } else if (in_array($name, [
@@ -160,11 +155,79 @@ class Model
                 'sum',
             ])) {
             if (Ez::config('dbDistributede') === 0) {
-                $medoo = $this->makeMedoo(1);
+                $medoo = self::makeMedoo(1);
             } else {
-                $medoo = $this->makeMedoo(2);
+                $medoo = self::makeMedoo(2);
             }
-            array_unshift($arguments, $this->tableName);
+            array_unshift($arguments, $this->tablename);
+            return call_user_func_array([$medoo, $name], $arguments);
+            
+        } else {
+            throw new \Exception('Method not exists');
+        }
+    }
+    
+    /**
+     * 静态调用medoo （同上）,不可直接通过Model调用（如Model::get()），仅可用子类定义表名后调用
+     * 
+     * @param string $name 方法名
+     * @param array $$arguments 参数数组
+     */
+    public function __callStatic($name, $arguments) {
+        if (in_array($name, [
+                'id',
+                'action',
+                'quote',
+                'debug',
+            ])) {
+            $medoo  = self::makeMedoo(1);
+            return call_user_func_array([$medoo, $name], $arguments);
+            
+        } else if (in_array($name, [
+                'error',
+                'log',
+                'last',
+                'info',
+            ])) {
+            
+            if (Ez::config('dbDistributede') === 0) {
+                $medoo  = self::makeMedoo(1);
+                return call_user_func_array([$medoo, $name], $arguments);
+            } else {
+                $medoo1 = self::makeMedoo(1);
+                $medoo2 = self::makeMedoo(2);
+                return [
+                    0   => call_user_func_array([$medoo1, $name], $arguments),
+                    1   => call_user_func_array([$medoo2, $name], $arguments),
+                ];
+            }
+            
+        } else if (in_array($name, [
+                'delete',
+                'insert',
+                'replace',
+                'update',
+            ])) {
+            $medoo  = self::makeMedoo(1);
+            array_unshift($arguments, static::$tableName);
+            return call_user_func_array([$medoo, $name], $arguments);
+            
+        } else if (in_array($name, [
+                'get', 
+                'max',
+                'min',
+                'avg',
+                'has',
+                'count',
+                'select',
+                'sum',
+            ])) {
+            if (Ez::config('dbDistributede') === 0) {
+                $medoo = self::makeMedoo(1);
+            } else {
+                $medoo = self::makeMedoo(2);
+            }
+            array_unshift($arguments, static::$tableName);
             return call_user_func_array([$medoo, $name], $arguments);
             
         } else {
@@ -178,9 +241,9 @@ class Model
      * @param string $sql
      * @return boolean
      */
-    public function query($sql, $map = [])
+    public static function query($sql, $map = [])
     {
-        $medoo  = $this->makeMedoo(1);
+        $medoo  = self::makeMedoo(1);
         $medoo->query($sql, $map);
         if ($medoo->statement->errorCode() === '00000') {
             return $medoo->statement;

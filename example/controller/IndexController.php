@@ -2,7 +2,7 @@
 namespace example\controller;
 use ez\core\Controller;
 use ez\core\Route;
-use example\model\TestModel;
+use example\model\Test;
 
 /**
  * 示例控制器
@@ -11,13 +11,21 @@ use example\model\TestModel;
  */
 class IndexController extends Controller
 {
+    public function index() {
+        $Test = new Test();
+        $Name = new \example\model\Name();
+        
+        var_dump($Test->tt());
+        var_dump($Name->tt());
+    }
+    
     public function add() {
-        $Test = new TestModel();
+        $Test = new Test();
         var_dump($Test->insert(['Value' => 'ssd萨达阿斯达', 'Num' => 22]));
         var_dump($Test->select('*', ['ID[<>]' => [100, 120]]));
     }
     
-    public function index() {
+    public function t3() {
         if(empty($_GET['asdasda'])) {
             echo '<a href="'.Route::createUrl('index', ['d' => 'sds']).'">adsd</a>';
         } else {
