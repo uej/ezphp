@@ -48,7 +48,7 @@ class Route
             }
             
         } else {
-            if(isset($_SERVER['PATH_INFO']) && !empty(filter_input(INPUT_SERVER, 'PATH_INFO'))) {
+            if (isset($_SERVER['PATH_INFO']) && !empty(filter_input(INPUT_SERVER, 'PATH_INFO'))) {
                 $param = explode('/', trim(str_replace(Ez::config('urlSuffix'), '', filter_input(INPUT_SERVER, 'PATH_INFO')), '/'));
             } else {
                 $param = [];
@@ -56,14 +56,14 @@ class Route
         }
         
         /* 控制器 */
-        if(isset($param[0]) && !empty($param[0])) {
+        if (isset($param[0]) && !empty($param[0])) {
             $this->controller = strtolower($param[0]);
         } else {
             $this->controller = Ez::config('defaultController');
         }
         
         /* 方法 */
-        if(isset($param[1]) && !empty($param[0])) {
+        if (isset($param[1]) && !empty($param[0])) {
             $this->action = strtolower($param[1]);
         } else {
             $this->action = Ez::config('defaultAction');
@@ -77,20 +77,35 @@ class Route
      * @param array $params 参数，键值对数组
      * @param boolen $domain 是否显示域名
      * @param boolen $redirect 是否跳转
+     * @param string $entry 入口脚本文件
      * @return string URL
      * @access public
      */
-    public static function createUrl($url = '', $params = [], $domain = TRUE, $redirect = FALSE)
+    public static function createUrl($url = '', $params = [], $domain = TRUE, $redirect = FALSE, $entry = NULL)
     {
         if (empty($url)) {
             return HTTPHOST;
         }
         
         /* 域名显示判断 */
-        if (!Ez::config('urlRewrite')) {
-            $realurl = $domain ? HTTPHOST . '/index.php' : '/index.php';
+        if (!Ez::config('urlRewrite') || !empty($entry)) {
+            if (empty($entry)) {
+                $entry  = filter_input(INPUT_SERVER, 'SCRIPT_NAME');
+            } else {
+                $entry  = '/'.$entry;
+            }
+            $realurl    = $domain ? HTTPHOST . $entry : $entry;
         } else {
-            $realurl = $domain ? HTTPHOST : '';
+            if (!empty($_SERVER['ORIG_SCRIPT_NAME'])) {
+                $entry  = filter_input(INPUT_SERVER, 'ORIG_SCRIPT_NAME');
+            } else {
+                $entry  = filter_input(INPUT_SERVER, 'SCRIPT_NAME');
+            }
+            if ($entry == '/index.php') {
+                $realurl    = $domain ? HTTPHOST : '';
+            } else {
+                $realurl    = $domain ? HTTPHOST . $entry : $entry;
+            }
         }
         
         /* get参数组装 */
@@ -135,7 +150,7 @@ class Route
         $url = str_replace(array("\n", "\r"), '', $url);
 
         /* 提示信息 */
-        if(empty($msg)) {
+        if (empty($msg)) {
             $msg = "系统将在{$time}秒之后自动跳转到{$url}！";
         }
 
