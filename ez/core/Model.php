@@ -37,13 +37,13 @@ class Model
      */
     public function __construct($table = '')
     {
-        $this->tablename = empty($table) ? static::$tableName : $table;
-        if (empty($this->tablename)) {
+        $this->table = empty($table) ? static::$tableName : $table;
+        if (empty($this->table)) {
             throw new \Exception("no tableName");
         }
         
         $this->tablePrefix      = Ez::config('dbPrefix');
-        $this->trueTableName    = $this->tablePrefix . $this->tablename;
+        $this->trueTableName    = $this->tablePrefix . $this->table;
     }
     
     /**
@@ -141,7 +141,7 @@ class Model
                 'update',
             ])) {
             $medoo  = self::makeMedoo(1);
-            array_unshift($arguments, $this->tablename);
+            array_unshift($arguments, $this->table);
             return call_user_func_array([$medoo, $name], $arguments);
             
         } else if (in_array($name, [
@@ -159,7 +159,7 @@ class Model
             } else {
                 $medoo = self::makeMedoo(2);
             }
-            array_unshift($arguments, $this->tablename);
+            array_unshift($arguments, $this->table);
             return call_user_func_array([$medoo, $name], $arguments);
             
         } else {
