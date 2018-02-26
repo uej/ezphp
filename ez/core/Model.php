@@ -43,7 +43,7 @@ class Model
         }
         
         $this->tablePrefix      = Ez::config('dbPrefix');
-        $this->trueTableName    = $this->tablePrefix . $this->tableName;
+        $this->trueTableName    = $this->tablePrefix . $this->tablename;
     }
     
     /**
