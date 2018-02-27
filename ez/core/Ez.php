@@ -18,7 +18,7 @@ class Ez
         /* PHP版本检测 */
         if (version_compare(PHP_VERSION, '5.4.0', '<')) {
             header("Content-type:text/html;charset=utf-8");
-            die('PHP版过低! 运行系统必须大于5.4。谢谢合作!');
+            die('PHP版过低! 至少5.4。谢谢合作!');
         }
         
         /* 自动加载注册 */
