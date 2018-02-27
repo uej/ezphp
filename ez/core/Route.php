@@ -84,7 +84,7 @@ class Route
     public static function createUrl($url = '', $params = [], $domain = TRUE, $redirect = FALSE, $entry = NULL)
     {
         if (empty($url)) {
-            return HTTPHOST;
+            $url    = CONTROLLER_NAME . '/' . ACTION_NAME;
         }
         
         /* 域名显示判断 */
