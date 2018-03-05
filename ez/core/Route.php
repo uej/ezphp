@@ -40,15 +40,15 @@ class Route
     {
         /* url重写 */
         if (Ez::config('urlRewrite')) {
-            if (isset($_SERVER['REDIRECT_PATH_INFO']) && !empty(filter_input(INPUT_SERVER, 'REDIRECT_PATH_INFO'))) {
+            if (isset($_SERVER['REDIRECT_PATH_INFO']) && !empty($_SERVER['REDIRECT_PATH_INFO'])) {
                 $pathinfo = trim(str_replace(Ez::config('urlSuffix'), '', filter_input(INPUT_SERVER, 'REDIRECT_PATH_INFO')), '/');
                 $param = explode('/', $pathinfo);
-            } elseif (isset($_SERVER['PATH_INFO']) && !empty(filter_input(INPUT_SERVER, 'PATH_INFO'))) {
+            } elseif (isset($_SERVER['PATH_INFO']) && !empty($_SERVER['PATH_INFO'])) {
                 $param = explode('/', trim(str_replace(Ez::config('urlSuffix'), '', filter_input(INPUT_SERVER, 'PATH_INFO')), '/'));
             }
             
         } else {
-            if (isset($_SERVER['PATH_INFO']) && !empty(filter_input(INPUT_SERVER, 'PATH_INFO'))) {
+            if (isset($_SERVER['PATH_INFO']) && !empty($_SERVER['PATH_INFO'])) {
                 $param = explode('/', trim(str_replace(Ez::config('urlSuffix'), '', filter_input(INPUT_SERVER, 'PATH_INFO')), '/'));
             } else {
                 $param = [];

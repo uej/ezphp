@@ -265,7 +265,7 @@ class Model
     public function findPage($page = 10, $max = 9, $columns = '*', $where = null, $join = null)
     {
         /* 总数，页数计算 */
-        $p      = !empty(filter_input(INPUT_GET, 'p')) ? intval(filter_input(INPUT_GET, 'p')) : 1;
+        $p      = !empty($_GET['p']) ? intval(filter_input(INPUT_GET, 'p')) : 1;
         $cwhere = $where;
         unset($cwhere['ORDER']);
         unset($cwhere['GROUP']);

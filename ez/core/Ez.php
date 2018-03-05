@@ -46,7 +46,8 @@ class Ez
         
         /* session驱动 */
         if (self::config('sessionAutoStart')) {
-            if (empty(self::config('sessionDriver'))) {
+            $sessionDriver  = self::config('sessionDriver');
+            if (empty($sessionDriver)) {
                 $sessionSavePath = self::config('sessionSavePath');
                 if (!empty($sessionSavePath) && is_dir($sessionSavePath)) {
                     session_save_path($sessionSavePath);
@@ -54,7 +55,7 @@ class Ez
                 session_start();
             } else {
                 if (class_exists(self::config('sessionDriver'))) {
-                    new $driver();
+                    new $sessionDriver();
                 }
             }
         }
@@ -64,7 +65,7 @@ class Ez
         
         /* 常量设置 */
         if (!defined('HTTPHOST')) {
-            if(!isset($_SERVER['HTTPS']) || empty(filter_input(INPUT_SERVER, 'HTTPS')) || filter_input(INPUT_SERVER, 'HTTPS')=='off') {
+            if(!isset($_SERVER['HTTPS']) || empty($_SERVER['HTTPS']) || $_SERVER['HTTPS']=='off') {
                 define('HTTPHOST', 'http://'.filter_input(INPUT_SERVER, 'HTTP_HOST'));
             } else {
                 define('HTTPHOST', 'https://'.filter_input(INPUT_SERVER, 'HTTP_HOST'));
