@@ -99,6 +99,21 @@ class Model
     }
     
     /**
+     * 用pdo访问数据库
+     * 
+     * @param $type 主从选择
+     * @access public
+     */
+    public function pdo($type = 1)
+    {
+        if ($type == 1) {
+            return self::makeMedoo(1)->pdo;
+        } else {
+            return self::makeMedoo(2)->pdo;
+        }
+    }
+    
+    /**
      * 魔术方法调用medoo
      * 
      * @param string $name 方法名
@@ -173,7 +188,7 @@ class Model
      * @param string $name 方法名
      * @param array $$arguments 参数数组
      */
-    public function __callStatic($name, $arguments) {
+    public static function __callStatic($name, $arguments) {
         if (in_array($name, [
                 'id',
                 'action',
@@ -404,8 +419,7 @@ class Model
         
         $arr = [];
         
-        $this->query("SHOW COLUMNS FROM `$this->trueTableName`");
-        $columns = $this->statement->fetchAll(\PDO::FETCH_ASSOC);
+        $columns = $this->query("SHOW COLUMNS FROM `$this->trueTableName`")->fetchAll(\PDO::FETCH_ASSOC);
         foreach ($columns as $val) {
             $keys[] = $val['Field'];
         }
