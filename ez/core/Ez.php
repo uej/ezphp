@@ -22,19 +22,21 @@ class Ez
         }
         
         /* 自动加载注册 */
-        spl_autoload_register(function($classname) {
-            if (false !== strpos($classname, '\\')) {
+        if (!function_exists('ezAutoload')) {
+            spl_autoload_register(function($classname) {
+                if (false !== strpos($classname, '\\')) {
 
-                /* 定位路径 */
-                $filename = SITE_PATH . '/../../' . str_replace('\\', '/', $classname . '.php');
+                    /* 定位路径 */
+                    $filename = SITE_PATH . '/../../' . str_replace('\\', '/', $classname . '.php');
 
-                /* 引入文件 */
-                if (is_file($filename)) {
-                    include $filename;
+                    /* 引入文件 */
+                    if (is_file($filename)) {
+                        include $filename;
+                    }
                 }
-            }
-            return;
-        }, TRUE, TRUE);
+                return;
+            }, TRUE, TRUE);
+        }
         
         set_error_handler(["\\ez\\core\\Error", "errorHandler"]);
         set_exception_handler(["\\ez\\core\\Error", "exceptionHandler"]);
