@@ -258,11 +258,13 @@ class Model
      */
     public static function query($sql, $map = [])
     {
-        $medoo  = self::makeMedoo(1);
-        $medoo->query($sql, $map);
-        if ($medoo->statement->errorCode() === '00000') {
-            return $medoo->statement;
+        $medoo      = self::makeMedoo(1);
+        $statement  = $medoo->query($sql, $map);
+        if ($statement->errorCode() === '00000') {
+            return $statement;
         } else {
+            $this->error    = $statement->errorInfo();
+            $this->error    = $this->error[2];
             return FALSE;
         }
     }
@@ -425,7 +427,7 @@ class Model
         }
         foreach ($data as $key => $val) {
             if (in_array($key, $keys)) {
-                $arr[$key] = htmlspecialchars(trim($val));      // 全局转换html元素
+                $arr[$key] = trim($val);      // 全局转换html元素
             }
         }
         
