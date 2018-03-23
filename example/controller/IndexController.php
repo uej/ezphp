@@ -12,11 +12,13 @@ use example\model\Test;
 class IndexController extends Controller
 {
     public function index() {
+        die('ssss');
         $Test = new Test();
         $Name = new \example\model\Name();
         
-        var_dump($Test->tt());
-        var_dump($Name->tt());
+        dump($_GET);
+//        var_dump($Test->tt());
+//        var_dump($Name->tt());
     }
     
     public function add() {
