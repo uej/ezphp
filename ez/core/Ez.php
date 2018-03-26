@@ -68,9 +68,9 @@ class Ez
         /* 常量设置 */
         if (!defined('HTTPHOST')) {
             if(!isset($_SERVER['HTTPS']) || empty($_SERVER['HTTPS']) || $_SERVER['HTTPS']=='off') {
-                define('HTTPHOST', 'http://'.filter_input(INPUT_SERVER, 'HTTP_HOST'));
+                define('HTTPHOST', 'http://'.filter_input(INPUT_SERVER, 'SERVER_NAME'));
             } else {
-                define('HTTPHOST', 'https://'.filter_input(INPUT_SERVER, 'HTTP_HOST'));
+                define('HTTPHOST', 'https://'.filter_input(INPUT_SERVER, 'SERVER_NAME'));
             }
         }
         if (!defined('__CSS__'))    define('__CSS__',    HTTPHOST.'/css');
