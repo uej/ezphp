@@ -11,12 +11,23 @@ use example\model\Test;
  */
 class IndexController extends Controller
 {
-    public function index() {
-        die('ssss');
-        $Test = new Test();
-        $Name = new \example\model\Name();
+    public function __construct() {
+        parent::__construct();
+        $this->name = 'sdad';
+        dump($this->name);
         
-        dump($_GET);
+    }
+
+
+
+
+    public function index() {
+        dump(isset($this->name));
+        
+        $Test = new Test();
+        
+        dump($Test->get('*'));
+        dump(Test::get('*'));
 //        var_dump($Test->tt());
 //        var_dump($Name->tt());
     }
