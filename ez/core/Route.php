@@ -94,7 +94,7 @@ class Route
             } else {
                 $entry  = '/'.$entry;
             }
-            $realurl    = $domain ? HTTPHOST . $entry : $entry;
+            $realurl    = $domain ? SITE_URL . $entry : $entry;
         } else {
             if (!empty($_SERVER['ORIG_SCRIPT_NAME'])) {
                 $entry  = filter_input(INPUT_SERVER, 'ORIG_SCRIPT_NAME');
@@ -102,9 +102,9 @@ class Route
                 $entry  = filter_input(INPUT_SERVER, 'SCRIPT_NAME');
             }
             if ($entry == '/index.php') {
-                $realurl    = $domain ? HTTPHOST : '';
+                $realurl    = $domain ? SITE_URL : '';
             } else {
-                $realurl    = $domain ? HTTPHOST . $entry : $entry;
+                $realurl    = $domain ? SITE_URL . $entry : $entry;
             }
         }
         

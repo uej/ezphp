@@ -66,7 +66,7 @@ class Ez
         date_default_timezone_set(self::config('timeZone'));
         
         /* 常量设置 */
-        if (!defined('HTTPHOST')) {
+        if (!defined('SITE_URL')) {
             if(!isset($_SERVER['HTTPS']) || empty($_SERVER['HTTPS']) || $_SERVER['HTTPS']=='off') {
                 $http   = 'http://';
             } else {
@@ -74,15 +74,18 @@ class Ez
             }
             
             if (filter_input(INPUT_SERVER, 'SERVER_PORT') == "80") {
-                define('HTTPHOST', $http.filter_input(INPUT_SERVER, 'SERVER_NAME'));
+                define('HTTPHOST', filter_input(INPUT_SERVER, 'SERVER_NAME'));
             } else {
-                define('HTTPHOST', $http.filter_input(INPUT_SERVER, 'SERVER_NAME').':'.filter_input(INPUT_SERVER, 'SERVER_PORT'));
+                define('HTTPHOST', filter_input(INPUT_SERVER, 'SERVER_NAME').':'.filter_input(INPUT_SERVER, 'SERVER_PORT'));
             }
+            
+            
+            define('SITE_URL',   $http . HTTPHOST . rtrim(str_replace('index.php', '', filter_input(INPUT_SERVER, 'SCRIPT_NAME'))), '/');
         }
-        if (!defined('__CSS__'))    define('__CSS__',    HTTPHOST.'/css');
-        if (!defined('__JS__'))     define('__JS__',     HTTPHOST.'/js');
-        if (!defined('__IMG__'))    define('__IMG__',    HTTPHOST.'/images');
-        if (!defined('__VIDEO__'))  define('__VIDEO__',  HTTPHOST.'/videos');
+        if (!defined('__CSS__'))    define('__CSS__',    SITE_URL.'/css');
+        if (!defined('__JS__'))     define('__JS__',     SITE_URL.'/js');
+        if (!defined('__IMG__'))    define('__IMG__',    SITE_URL.'/images');
+        if (!defined('__VIDEO__'))  define('__VIDEO__',  SITE_URL.'/videos');
     }
     
     /**
